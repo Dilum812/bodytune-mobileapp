@@ -1,0 +1,79 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="200dp"
+    android:height="200dp"
+    android:viewportWidth="200"
+    android:viewportHeight="200">
+    
+    <!-- Background circle -->
+    <path
+        android:fillColor="#FF2196F3"
+        android:pathData="M100,100m-80,0a80,80 0,1 1,160 0a80,80 0,1 1,-160 0"/>
+    
+    <!-- Chart background -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M70,80L130,80L130,140L70,140Z"/>
+    
+    <!-- Chart grid lines -->
+    <path
+        android:strokeColor="#E0E0E0"
+        android:strokeWidth="1"
+        android:pathData="M70,90L130,90"/>
+    <path
+        android:strokeColor="#E0E0E0"
+        android:strokeWidth="1"
+        android:pathData="M70,100L130,100"/>
+    <path
+        android:strokeColor="#E0E0E0"
+        android:strokeWidth="1"
+        android:pathData="M70,110L130,110"/>
+    <path
+        android:strokeColor="#E0E0E0"
+        android:strokeWidth="1"
+        android:pathData="M70,120L130,120"/>
+    <path
+        android:strokeColor="#E0E0E0"
+        android:strokeWidth="1"
+        android:pathData="M70,130L130,130"/>
+    
+    <!-- Progress bars -->
+    <path
+        android:fillColor="#FF2196F3"
+        android:pathData="M80,130L85,130L85,110L80,110Z"/>
+    <path
+        android:fillColor="#FF2196F3"
+        android:pathData="M90,130L95,130L95,95L90,95Z"/>
+    <path
+        android:fillColor="#FF2196F3"
+        android:pathData="M100,130L105,130L105,85L100,85Z"/>
+    <path
+        android:fillColor="#FF2196F3"
+        android:pathData="M110,130L115,130L115,100L110,100Z"/>
+    <path
+        android:fillColor="#FF2196F3"
+        android:pathData="M120,130L125,130L125,90L120,90Z"/>
+    
+    <!-- Progress line -->
+    <path
+        android:strokeColor="#4CAF50"
+        android:strokeWidth="3"
+        android:pathData="M80,110L95,95L105,85L115,100L125,90"/>
+    
+    <!-- Data points -->
+    <path
+        android:fillColor="#4CAF50"
+        android:pathData="M80,110m-3,0a3,3 0,1 1,6 0a3,3 0,1 1,-6 0"/>
+    <path
+        android:fillColor="#4CAF50"
+        android:pathData="M95,95m-3,0a3,3 0,1 1,6 0a3,3 0,1 1,-6 0"/>
+    <path
+        android:fillColor="#4CAF50"
+        android:pathData="M105,85m-3,0a3,3 0,1 1,6 0a3,3 0,1 1,-6 0"/>
+    <path
+        android:fillColor="#4CAF50"
+        android:pathData="M115,100m-3,0a3,3 0,1 1,6 0a3,3 0,1 1,-6 0"/>
+    <path
+        android:fillColor="#4CAF50"
+        android:pathData="M125,90m-3,0a3,3 0,1 1,6 0a3,3 0,1 1,-6 0"/>
+    
+</vector>

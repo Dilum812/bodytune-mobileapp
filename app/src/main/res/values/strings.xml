@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">BodyTune Mobile App</string>
+    
+    <!-- Onboarding -->
+    <string name="skip">Skip</string>
+    <string name="next">Next</string>
+    <string name="get_started">Get Started</string>
+    
+    <!-- Onboarding Screen 1 -->
+    <string name="welcome_to_bodytune">Welcome to BodyTune</string>
+    <string name="onboarding_description">Your personal fitness companion that helps you achieve your health goals with personalized workouts and tracking.</string>
+    
+    <!-- Onboarding Screen 2 -->
+    <string name="personalized_workouts">Personalized Workouts</string>
+    <string name="workout_description">Get customized workout plans tailored to your fitness level, goals, and preferences.</string>
+    
+    <!-- Onboarding Screen 3 -->
+    <string name="track_your_progress">Track Your Progress</string>
+    <string name="progress_description">Monitor your fitness journey with detailed analytics, progress charts, and achievement milestones.</string>
+    
+    <!-- Onboarding Screen 4 -->
+    <string name="ready_to_start">Ready to Start?</string>
+    <string name="start_description">Join thousands of users who have transformed their fitness journey with BodyTune.</string>
+</resources>

@@ -1,0 +1,47 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="200dp"
+    android:height="200dp"
+    android:viewportWidth="200"
+    android:viewportHeight="200">
+    
+    <!-- Background circle -->
+    <path
+        android:fillColor="#FF2196F3"
+        android:pathData="M100,100m-80,0a80,80 0,1 1,160 0a80,80 0,1 1,-160 0"/>
+    
+    <!-- Dumbbell 1 -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M60,80L80,80L80,120L60,120Z"/>
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M55,85L65,85L65,115L55,115Z"/>
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M75,85L85,85L85,115L75,115Z"/>
+    
+    <!-- Dumbbell 2 -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M120,80L140,80L140,120L120,120Z"/>
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M115,85L125,85L125,115L115,115Z"/>
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M135,85L145,85L145,115L135,115Z"/>
+    
+    <!-- Connecting bar -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M85,95L115,95L115,105L85,105Z"/>
+    
+    <!-- Fitness tracker -->
+    <path
+        android:fillColor="#424242"
+        android:pathData="M90,130L110,130L110,150L90,150Z"/>
+    <path
+        android:fillColor="#FF2196F3"
+        android:pathData="M95,135L105,135L105,145L95,145Z"/>
+    
+</vector>

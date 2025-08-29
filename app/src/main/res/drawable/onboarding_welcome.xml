@@ -1,0 +1,38 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="200dp"
+    android:height="200dp"
+    android:viewportWidth="200"
+    android:viewportHeight="200">
+    
+    <!-- Background circle -->
+    <path
+        android:fillColor="#FF2196F3"
+        android:pathData="M100,100m-80,0a80,80 0,1 1,160 0a80,80 0,1 1,-160 0"/>
+    
+    <!-- Person silhouette -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M100,60C85,60 73,72 73,87C73,102 85,114 100,114C115,114 127,102 127,87C127,72 115,60 100,60Z"/>
+    
+    <!-- Body -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M85,120L115,120L115,160C115,165 110,170 105,170L95,170C90,170 85,165 85,160Z"/>
+    
+    <!-- Arms -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M75,110L85,110L85,130L75,130Z"/>
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M115,110L125,110L125,130L115,130Z"/>
+    
+    <!-- Water bottle -->
+    <path
+        android:fillColor="#E0E0E0"
+        android:pathData="M130,100L140,100L140,130L130,130Z"/>
+    <path
+        android:fillColor="#424242"
+        android:pathData="M128,98L142,98L142,102L128,102Z"/>
+    
+</vector>
