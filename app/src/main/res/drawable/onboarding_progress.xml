@@ -1,79 +1,56 @@
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="200dp"
-    android:height="200dp"
-    android:viewportWidth="200"
-    android:viewportHeight="200">
+    android:width="300dp"
+    android:height="400dp"
+    android:viewportWidth="300"
+    android:viewportHeight="400">
     
-    <!-- Background circle -->
+    <!-- Background -->
     <path
-        android:fillColor="#FF2196F3"
-        android:pathData="M100,100m-80,0a80,80 0,1 1,160 0a80,80 0,1 1,-160 0"/>
+        android:fillColor="#000000"
+        android:pathData="M0,0L300,0L300,400L0,400Z"/>
     
-    <!-- Chart background -->
+    <!-- Person silhouette - Woman with athletic wear -->
+    <path
+        android:fillColor="#8D6E63"
+        android:pathData="M150,80C130,80 115,95 115,115C115,135 130,150 150,150C170,150 185,135 185,115C185,95 170,80 150,80Z"/>
+    
+    <!-- Sports bra -->
+    <path
+        android:fillColor="#424242"
+        android:pathData="M120,150L180,150L180,200C180,210 170,220 160,220L140,220C130,220 120,210 120,200Z"/>
+    
+    <!-- Athletic bottoms -->
+    <path
+        android:fillColor="#424242"
+        android:pathData="M120,200L180,200L180,250C180,260 170,270 160,270L140,270C130,270 120,260 120,250Z"/>
+    
+    <!-- Earbuds -->
     <path
         android:fillColor="#FFFFFF"
-        android:pathData="M70,80L130,80L130,140L70,140Z"/>
+        android:pathData="M140,100L145,100L145,105L140,105Z"/>
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M155,100L160,100L160,105L155,105Z"/>
     
-    <!-- Chart grid lines -->
+    <!-- Earbud wires -->
     <path
-        android:strokeColor="#E0E0E0"
-        android:strokeWidth="1"
-        android:pathData="M70,90L130,90"/>
-    <path
-        android:strokeColor="#E0E0E0"
-        android:strokeWidth="1"
-        android:pathData="M70,100L130,100"/>
-    <path
-        android:strokeColor="#E0E0E0"
-        android:strokeWidth="1"
-        android:pathData="M70,110L130,110"/>
-    <path
-        android:strokeColor="#E0E0E0"
-        android:strokeWidth="1"
-        android:pathData="M70,120L130,120"/>
-    <path
-        android:strokeColor="#E0E0E0"
-        android:strokeWidth="1"
-        android:pathData="M70,130L130,130"/>
+        android:fillColor="#E0E0E0"
+        android:pathData="M142,105L142,130L158,130L158,105Z"/>
     
-    <!-- Progress bars -->
+    <!-- Sweat drops -->
     <path
-        android:fillColor="#FF2196F3"
-        android:pathData="M80,130L85,130L85,110L80,110Z"/>
+        android:fillColor="#FFFFFF"
+        android:pathData="M145,85L147,90L145,95L143,90Z"/>
     <path
-        android:fillColor="#FF2196F3"
-        android:pathData="M90,130L95,130L95,95L90,95Z"/>
+        android:fillColor="#FFFFFF"
+        android:pathData="M155,80L157,85L155,90L153,85Z"/>
     <path
-        android:fillColor="#FF2196F3"
-        android:pathData="M100,130L105,130L105,85L100,85Z"/>
-    <path
-        android:fillColor="#FF2196F3"
-        android:pathData="M110,130L115,130L115,100L110,100Z"/>
-    <path
-        android:fillColor="#FF2196F3"
-        android:pathData="M120,130L125,130L125,90L120,90Z"/>
+        android:fillColor="#FFFFFF"
+        android:pathData="M150,90L152,95L150,100L148,95Z"/>
     
-    <!-- Progress line -->
+    <!-- Hair -->
     <path
-        android:strokeColor="#4CAF50"
-        android:strokeWidth="3"
-        android:pathData="M80,110L95,95L105,85L115,100L125,90"/>
-    
-    <!-- Data points -->
-    <path
-        android:fillColor="#4CAF50"
-        android:pathData="M80,110m-3,0a3,3 0,1 1,6 0a3,3 0,1 1,-6 0"/>
-    <path
-        android:fillColor="#4CAF50"
-        android:pathData="M95,95m-3,0a3,3 0,1 1,6 0a3,3 0,1 1,-6 0"/>
-    <path
-        android:fillColor="#4CAF50"
-        android:pathData="M105,85m-3,0a3,3 0,1 1,6 0a3,3 0,1 1,-6 0"/>
-    <path
-        android:fillColor="#4CAF50"
-        android:pathData="M115,100m-3,0a3,3 0,1 1,6 0a3,3 0,1 1,-6 0"/>
-    <path
-        android:fillColor="#4CAF50"
-        android:pathData="M125,90m-3,0a3,3 0,1 1,6 0a3,3 0,1 1,-6 0"/>
+        android:fillColor="#3E2723"
+        android:pathData="M115,80C115,80 130,70 150,70C170,70 185,80 185,80L185,95C185,95 170,85 150,85C130,85 115,95 115,95Z"/>
     
 </vector>

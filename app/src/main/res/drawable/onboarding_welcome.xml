@@ -1,38 +1,46 @@
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="200dp"
-    android:height="200dp"
-    android:viewportWidth="200"
-    android:viewportHeight="200">
+    android:width="300dp"
+    android:height="400dp"
+    android:viewportWidth="300"
+    android:viewportHeight="400">
     
-    <!-- Background circle -->
+    <!-- Background -->
     <path
-        android:fillColor="#FF2196F3"
-        android:pathData="M100,100m-80,0a80,80 0,1 1,160 0a80,80 0,1 1,-160 0"/>
+        android:fillColor="#000000"
+        android:pathData="M0,0L300,0L300,400L0,400Z"/>
     
-    <!-- Person silhouette -->
+    <!-- Person silhouette - Man with athletic wear -->
     <path
-        android:fillColor="#FFFFFF"
-        android:pathData="M100,60C85,60 73,72 73,87C73,102 85,114 100,114C115,114 127,102 127,87C127,72 115,60 100,60Z"/>
+        android:fillColor="#8D6E63"
+        android:pathData="M150,80C130,80 115,95 115,115C115,135 130,150 150,150C170,150 185,135 185,115C185,95 170,80 150,80Z"/>
     
-    <!-- Body -->
+    <!-- Athletic shirt -->
     <path
-        android:fillColor="#FFFFFF"
-        android:pathData="M85,120L115,120L115,160C115,165 110,170 105,170L95,170C90,170 85,165 85,160Z"/>
+        android:fillColor="#424242"
+        android:pathData="M120,150L180,150L180,250C180,260 170,270 160,270L140,270C130,270 120,260 120,250Z"/>
     
     <!-- Arms -->
     <path
-        android:fillColor="#FFFFFF"
-        android:pathData="M75,110L85,110L85,130L75,130Z"/>
+        android:fillColor="#8D6E63"
+        android:pathData="M110,160L130,160L130,220L110,220Z"/>
     <path
-        android:fillColor="#FFFFFF"
-        android:pathData="M115,110L125,110L125,130L115,130Z"/>
+        android:fillColor="#8D6E63"
+        android:pathData="M170,160L190,160L190,220L170,220Z"/>
     
-    <!-- Water bottle -->
+    <!-- Water bottle in left hand -->
     <path
         android:fillColor="#E0E0E0"
-        android:pathData="M130,100L140,100L140,130L130,130Z"/>
+        android:pathData="M85,180L105,180L105,220L85,220Z"/>
     <path
-        android:fillColor="#424242"
-        android:pathData="M128,98L142,98L142,102L128,102Z"/>
+        android:fillColor="#9E9E9E"
+        android:pathData="M83,178L107,178L107,182L83,182Z"/>
+    
+    <!-- Sweat drops -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M145,90L147,95L145,100L143,95Z"/>
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M155,85L157,90L155,95L153,90Z"/>
     
 </vector>

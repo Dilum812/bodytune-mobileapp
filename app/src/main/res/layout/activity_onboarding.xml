@@ -20,7 +20,7 @@
         android:gravity="center"
         android:orientation="horizontal"
         android:padding="16dp"
-        app:layout_constraintBottom_toTopOf="@+id/buttonLayout">
+        app:layout_constraintBottom_toBottomOf="@+id/buttonLayout">
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabLayout"
@@ -36,29 +36,32 @@
         android:id="@+id/buttonLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:padding="24dp"
         android:paddingBottom="32dp"
+        android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent">
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnSkip"
-            style="@style/Widget.Material3.Button.TextButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/skip"
-            android:textColor="@color/white" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnNext"
             style="@style/Widget.Material3.Button"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginStart="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
             android:text="@string/next"
-            app:backgroundTint="@color/blue_primary" />
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:backgroundTint="@color/blue_primary"
+            app:cornerRadius="12dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnSkip"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/skip"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
 
     </LinearLayout>
 

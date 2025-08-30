@@ -6,19 +6,53 @@
     <string name="next">Next</string>
     <string name="get_started">Get Started</string>
     
-    <!-- Onboarding Screen 1 -->
-    <string name="welcome_to_bodytune">Welcome to BodyTune</string>
-    <string name="onboarding_description">Your personal fitness companion that helps you achieve your health goals with personalized workouts and tracking.</string>
+    <!-- Splash Screen -->
+    <string name="app_title">BODYTUNE</string>
+    <string name="app_tagline">Fitness, Perfectly in Sync.</string>
     
-    <!-- Onboarding Screen 2 -->
-    <string name="personalized_workouts">Personalized Workouts</string>
-    <string name="workout_description">Get customized workout plans tailored to your fitness level, goals, and preferences.</string>
+    <!-- Onboarding Screen 1 - Welcome -->
+    <string name="welcome_title">Welcome to Your Productive Journey</string>
+    <string name="welcome_description">Track fitness in one simple app.</string>
     
-    <!-- Onboarding Screen 3 -->
-    <string name="track_your_progress">Track Your Progress</string>
-    <string name="progress_description">Monitor your fitness journey with detailed analytics, progress charts, and achievement milestones.</string>
+    <!-- Onboarding Screen 2 - Smarter Tracking -->
+    <string name="smarter_tracking_title">Smarter Tracking,<br/>Better Results</string>
+    <string name="smarter_tracking_description">Log meals, runs, and BMI easily.</string>
     
-    <!-- Onboarding Screen 4 -->
-    <string name="ready_to_start">Ready to Start?</string>
-    <string name="start_description">Join thousands of users who have transformed their fitness journey with BodyTune.</string>
+    <!-- Onboarding Screen 3 - Feature Screen -->
+    <string name="feature_title">Smarter Tracking,<br/>Better Results</string>
+    <string name="feature_description">Log meals, runs, and BMI easily.</string>
+    
+    <!-- Authentication Screens -->
+    <string name="sign_in_title">Welcome Back</string>
+    <string name="sign_in_subtitle">Log in now to continue your BodyTune fitness journey.</string>
+    <string name="sign_up_title">Create Account</string>
+    <string name="sign_up_subtitle">Log in now to continue your BodyTune fitness journey.</string>
+    <string name="enter_email">Enter your email</string>
+    <string name="create_password">Create a password</string>
+    <string name="re_enter_password">Re-enter your password</string>
+    <string name="sign_in">Sign In</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="continue_with_google">Continue with Google</string>
+    <string name="or_continue_with">or continue with</string>
+    <string name="dont_have_account">Don\'t have an account? Sign Up</string>
+    
+    <!-- Profile Setup Screen -->
+    <string name="tell_us_about_yourself">Tell Us About Yourself</string>
+    <string name="profile_subtitle">Your info helps us create the perfect plan for you.</string>
+    <string name="male">Male</string>
+    <string name="female">Female</string>
+    <string name="other">Other</string>
+    <string name="height_cm">Height (cm)</string>
+    <string name="weight_kg">Weight (kg)</string>
+    <string name="age_yrs">Age (yrs)</string>
+    <string name="enter_height">Enter your height</string>
+    <string name="enter_weight">Enter your weight</string>
+    <string name="enter_age">Enter your age</string>
+    <string name="btn_continue">Continue</string>
+    <string name="skip_for_now">Skip for now</string>
+    <string name="privacy_notice">*Your data is private and only used to personalize your BodyTune experience.</string>
+    
+    <!-- Onboarding Screen 4 - Ready to Start -->
+    <string name="ready_title">Ready to Start?</string>
+    <string name="ready_description">Join thousands of users who have transformed their fitness journey with BodyTune.</string>
 </resources>

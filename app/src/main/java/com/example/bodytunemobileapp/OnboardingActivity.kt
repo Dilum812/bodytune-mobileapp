@@ -10,6 +10,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.example.bodytunemobileapp.adapter.OnboardingAdapter
 import com.example.bodytunemobileapp.databinding.ActivityOnboardingBinding
 import com.example.bodytunemobileapp.model.OnboardingItem
+import com.example.bodytunemobileapp.model.ScreenType
 import com.google.android.material.tabs.TabLayoutMediator
 
 class OnboardingActivity : AppCompatActivity() {
@@ -45,29 +46,70 @@ class OnboardingActivity : AppCompatActivity() {
     
     private fun setupOnboardingItems() {
         val onboardingItems = listOf(
+            // Screen 1 - Welcome
             OnboardingItem(
-                R.drawable.onboarding_welcome,
-                getString(R.string.welcome_to_bodytune),
-                getString(R.string.onboarding_description)
+                image = R.drawable.onboarding_welcome,
+                logo = R.drawable.ic_launcher_foreground,
+                title = getString(R.string.welcome_title),
+                description = getString(R.string.welcome_description),
+                screenType = ScreenType.ONBOARDING
             ),
+            // Screen 2 - Smarter Tracking
             OnboardingItem(
-                R.drawable.onboarding_workout,
-                getString(R.string.personalized_workouts),
-                getString(R.string.workout_description)
+                image = R.drawable.onboarding_workout,
+                logo = R.drawable.ic_launcher_foreground,
+                title = getString(R.string.smarter_tracking_title),
+                description = getString(R.string.smarter_tracking_description),
+                screenType = ScreenType.ONBOARDING
             ),
+            // Screen 3 - Smarter Tracking (different image)
             OnboardingItem(
-                R.drawable.onboarding_progress,
-                getString(R.string.track_your_progress),
-                getString(R.string.progress_description)
+                image = R.drawable.onboarding_progress,
+                logo = R.drawable.ic_launcher_foreground,
+                title = getString(R.string.feature_title),
+                description = getString(R.string.feature_description),
+                screenType = ScreenType.ONBOARDING
             ),
+            // Screen 4 - Sign In
             OnboardingItem(
-                R.drawable.onboarding_start,
-                getString(R.string.ready_to_start),
-                getString(R.string.start_description)
+                image = R.drawable.onboarding_welcome,
+                logo = R.drawable.ic_launcher_foreground,
+                title = getString(R.string.sign_in_title),
+                description = getString(R.string.sign_in_subtitle),
+                screenType = ScreenType.SIGN_IN
+            ),
+            // Screen 5 - Sign Up
+            OnboardingItem(
+                image = R.drawable.onboarding_welcome,
+                logo = R.drawable.ic_launcher_foreground,
+                title = getString(R.string.sign_up_title),
+                description = getString(R.string.sign_up_subtitle),
+                screenType = ScreenType.SIGN_UP
+            ),
+            // Screen 6 - Profile Setup
+            OnboardingItem(
+                image = R.drawable.onboarding_welcome,
+                logo = R.drawable.ic_launcher_foreground,
+                title = getString(R.string.tell_us_about_yourself),
+                description = getString(R.string.profile_subtitle),
+                screenType = ScreenType.PROFILE_SETUP
+            ),
+            // Screen 7 - Ready to Start
+            OnboardingItem(
+                image = R.drawable.onboarding_ready,
+                logo = R.drawable.ic_launcher_foreground,
+                title = getString(R.string.ready_title),
+                description = getString(R.string.ready_description),
+                screenType = ScreenType.ONBOARDING
             )
         )
         
-        onboardingAdapter = OnboardingAdapter(onboardingItems)
+        onboardingAdapter = OnboardingAdapter(onboardingItems) { onSignUpClick() }
+    }
+    
+    private fun onSignUpClick() {
+        // Navigate to sign up screen (index 4)
+        binding.viewPager.currentItem = 4
     }
     
     private fun setupViewPager() {
@@ -84,6 +126,7 @@ class OnboardingActivity : AppCompatActivity() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
                 updateButtonText(position)
+                updateButtonVisibility(position)
             }
         })
     }
@@ -109,6 +152,13 @@ class OnboardingActivity : AppCompatActivity() {
         } else {
             binding.btnNext.text = getString(R.string.next)
         }
+    }
+    
+    private fun updateButtonVisibility(position: Int) {
+        // All screens show buttons
+        binding.btnSkip.visibility = android.view.View.VISIBLE
+        binding.btnNext.visibility = android.view.View.VISIBLE
+        binding.tabLayout.visibility = android.view.View.VISIBLE
     }
     
     private fun navigateToMainActivity() {
