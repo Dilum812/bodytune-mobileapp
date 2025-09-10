@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="progress_active_width">64dp</dimen>
+    <dimen name="progress_inactive_width">12dp</dimen>
+    <dimen name="progress_height">4dp</dimen>
+</resources>
