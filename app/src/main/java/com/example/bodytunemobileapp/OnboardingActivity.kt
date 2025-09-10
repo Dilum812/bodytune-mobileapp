@@ -2,6 +2,7 @@ package com.example.bodytunemobileapp
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
@@ -11,7 +12,6 @@ import com.example.bodytunemobileapp.adapter.OnboardingAdapter
 import com.example.bodytunemobileapp.databinding.ActivityOnboardingBinding
 import com.example.bodytunemobileapp.model.OnboardingItem
 import com.example.bodytunemobileapp.model.ScreenType
-import com.google.android.material.tabs.TabLayoutMediator
 
 class OnboardingActivity : AppCompatActivity() {
     
@@ -30,6 +30,7 @@ class OnboardingActivity : AppCompatActivity() {
         setupOnboardingItems()
         setupViewPager()
         setupButtons()
+        updateIndicator(0)
     }
     
     private fun setupMobileScreen() {
@@ -104,29 +105,29 @@ class OnboardingActivity : AppCompatActivity() {
             )
         )
         
-        onboardingAdapter = OnboardingAdapter(onboardingItems) { onSignUpClick() }
+        onboardingAdapter = OnboardingAdapter(onboardingItems, { onSignUpClick() }, { onSignInClick() })
     }
     
     private fun onSignUpClick() {
         // Navigate to sign up screen (index 4)
         binding.viewPager.currentItem = 4
     }
+
+    private fun onSignInClick() {
+        // Navigate to sign in screen (index 3)
+        binding.viewPager.currentItem = 3
+    }
     
     private fun setupViewPager() {
         binding.viewPager.adapter = onboardingAdapter
         
-        // Connect ViewPager2 with TabLayout
-        TabLayoutMediator(binding.tabLayout, binding.viewPager) { _, _ ->
-            // This lambda is called for each tab, but we don't need to do anything here
-            // as we're using custom tab backgrounds
-        }.attach()
-        
-        // Update button text based on current page
+        // Update button text and custom indicator based on current page
         binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
                 updateButtonText(position)
                 updateButtonVisibility(position)
+                updateIndicator(position)
             }
         })
     }
@@ -155,10 +156,39 @@ class OnboardingActivity : AppCompatActivity() {
     }
     
     private fun updateButtonVisibility(position: Int) {
-        // All screens show buttons
-        binding.btnSkip.visibility = android.view.View.VISIBLE
-        binding.btnNext.visibility = android.view.View.VISIBLE
-        binding.tabLayout.visibility = android.view.View.VISIBLE
+        // Hide buttons on Sign In (index 3) and Sign Up (index 4) pages
+        if (position == 3 || position == 4) {
+            binding.btnSkip.visibility = android.view.View.GONE
+            binding.btnNext.visibility = android.view.View.GONE
+        } else {
+            binding.btnSkip.visibility = android.view.View.VISIBLE
+            binding.btnNext.visibility = android.view.View.VISIBLE
+        }
+    }
+
+    private fun updateIndicator(position: Int) {
+        // Show indicator only on the first 3 onboarding pages
+        val showIndicator = position <= 2
+        binding.indicatorLayout.visibility = if (showIndicator) android.view.View.VISIBLE else android.view.View.GONE
+        if (!showIndicator) return
+
+        val segs = listOf(binding.seg1, binding.seg2, binding.seg3)
+        segs.forEachIndexed { index, view ->
+            if (index == position) {
+                view.setBackgroundResource(R.drawable.progress_active)
+                view.layoutParams = (view.layoutParams as ViewGroup.LayoutParams).apply {
+                    width = resources.getDimensionPixelSize(R.dimen.progress_active_width)
+                    height = resources.getDimensionPixelSize(R.dimen.progress_height)
+                }
+            } else {
+                view.setBackgroundResource(R.drawable.progress_inactive)
+                view.layoutParams = (view.layoutParams as ViewGroup.LayoutParams).apply {
+                    width = resources.getDimensionPixelSize(R.dimen.progress_inactive_width)
+                    height = resources.getDimensionPixelSize(R.dimen.progress_height)
+                }
+            }
+            view.requestLayout()
+        }
     }
     
     private fun navigateToMainActivity() {

@@ -13,22 +13,46 @@
         app:layout_constraintBottom_toTopOf="@+id/indicatorLayout"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <!-- Custom progress segments -->
     <LinearLayout
         android:id="@+id/indicatorLayout"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="horizontal"
-        android:padding="16dp"
-        app:layout_constraintBottom_toBottomOf="@+id/buttonLayout">
+        app:layout_constraintBottom_toTopOf="@+id/buttonLayout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/tabLayout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:tabBackground="@drawable/tab_selector"
-            app:tabGravity="center"
-            app:tabIndicatorHeight="0dp" />
+        <View
+            android:id="@+id/seg1"
+            android:layout_width="64dp"
+            android:layout_height="4dp"
+            android:background="@drawable/progress_active" />
+
+        <View
+            android:id="@+id/segSpacer1"
+            android:layout_width="12dp"
+            android:layout_height="4dp"
+            android:background="@android:color/transparent" />
+
+        <View
+            android:id="@+id/seg2"
+            android:layout_width="12dp"
+            android:layout_height="4dp"
+            android:background="@drawable/progress_inactive" />
+
+        <View
+            android:id="@+id/segSpacer2"
+            android:layout_width="12dp"
+            android:layout_height="4dp"
+            android:background="@android:color/transparent" />
+
+        <View
+            android:id="@+id/seg3"
+            android:layout_width="12dp"
+            android:layout_height="4dp"
+            android:background="@drawable/progress_inactive" />
 
     </LinearLayout>
 

@@ -23,7 +23,7 @@
         android:id="@+id/tvTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="16dp"
         android:text="@string/sign_up_title"
         android:textColor="@color/white"
         android:textSize="28sp"
@@ -35,7 +35,7 @@
     <!-- Subtitle -->
     <TextView
         android:id="@+id/tvSubtitle"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="@string/sign_up_subtitle"
@@ -50,15 +50,17 @@
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tilEmail"
         style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="32dp"
         android:hint="@string/enter_email"
         app:boxBackgroundColor="#424242"
         app:boxStrokeColor="@color/blue_primary"
         app:hintTextColor="@color/white"
         app:startIconDrawable="@drawable/ic_email"
         app:startIconTint="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvSubtitle">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -74,9 +76,9 @@
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tilPassword"
         style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="12dp"
         android:hint="@string/create_password"
         app:boxBackgroundColor="#424242"
         app:boxStrokeColor="@color/blue_primary"
@@ -85,6 +87,8 @@
         app:passwordToggleTint="@color/white"
         app:startIconDrawable="@drawable/ic_lock"
         app:startIconTint="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tilEmail">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -100,9 +104,9 @@
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tilConfirmPassword"
         style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="12dp"
         android:hint="@string/re_enter_password"
         app:boxBackgroundColor="#424242"
         app:boxStrokeColor="@color/blue_primary"
@@ -111,6 +115,8 @@
         app:passwordToggleTint="@color/white"
         app:startIconDrawable="@drawable/ic_lock"
         app:startIconTint="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tilPassword">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -125,64 +131,32 @@
     <!-- Sign Up Button -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnSignUp"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="56dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="16dp"
         android:text="@string/sign_up"
         android:textSize="16sp"
         android:textStyle="bold"
         app:backgroundTint="@color/blue_primary"
         app:cornerRadius="12dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tilConfirmPassword" />
 
-    <!-- Divider -->
-    <LinearLayout
-        android:id="@+id/dividerLayout"
-        android:layout_width="match_parent"
+
+    <!-- Bottom Sign In Link -->
+    <TextView
+        android:id="@+id/tvSignInLink"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:gravity="center"
-        android:orientation="horizontal"
-        app:layout_constraintTop_toBottomOf="@+id/btnSignUp">
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_weight="1"
-            android:background="@color/white" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:text="@string/or_continue_with"
-            android:textColor="@color/white"
-            android:textSize="14sp" />
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_weight="1"
-            android:background="@color/white" />
-
-    </LinearLayout>
-
-    <!-- Google Sign Up Button -->
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnGoogleSignUp"
-        style="@style/Widget.Material3.Button.OutlinedButton"
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:layout_marginTop="24dp"
-        android:text="@string/continue_with_google"
-        android:textColor="@color/white"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="24dp"
+        android:text="@string/already_have_account"
+        android:textColor="#9BB8FF"
         android:textSize="16sp"
-        app:backgroundTint="#424242"
-        app:cornerRadius="12dp"
-        app:icon="@drawable/ic_google"
-        app:iconGravity="textStart"
-        app:iconTint="@color/white"
-        app:layout_constraintTop_toBottomOf="@+id/dividerLayout" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnSignUp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -35,6 +35,7 @@
     <string name="continue_with_google">Continue with Google</string>
     <string name="or_continue_with">or continue with</string>
     <string name="dont_have_account">Don\'t have an account? Sign Up</string>
+    <string name="already_have_account">Already have an account? Sign In</string>
     
     <!-- Profile Setup Screen -->
     <string name="tell_us_about_yourself">Tell Us About Yourself</string>

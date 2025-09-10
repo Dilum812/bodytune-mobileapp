@@ -1,25 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black"
     android:fitsSystemWindows="true">
 
     <!-- Main Image (Person) -->
+
+    <!-- Content Layout -->
+
     <ImageView
         android:id="@+id/ivOnboarding"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="60dp"
         android:layout_marginBottom="32dp"
         android:scaleType="centerCrop"
+        app:layout_constraintBottom_toTopOf="@+id/contentLayout"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/contentLayout" />
+        app:layout_constraintVertical_bias="0.0" />
 
-    <!-- Content Layout -->
     <LinearLayout
         android:id="@+id/contentLayout"
         android:layout_width="match_parent"
@@ -31,28 +35,22 @@
         app:layout_constraintEnd_toEndOf="parent">
 
         <!-- Logo -->
-        <ImageView
-            android:id="@+id/ivLogo"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_marginBottom="16dp"
-            android:visibility="visible"
-            android:src="@drawable/ic_launcher_foreground" />
-
-        <!-- Title -->
         <TextView
             android:id="@+id/tvTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
+            android:lineSpacingExtra="4dp"
             android:text="@string/welcome_title"
             android:textAlignment="center"
             android:textColor="@color/white"
             android:textSize="28sp"
-            android:textStyle="bold"
-            android:lineSpacingExtra="4dp" />
+            android:textStyle="bold" />
+
+        <!-- Title -->
 
         <!-- Description -->
+
         <TextView
             android:id="@+id/tvDescription"
             android:layout_width="match_parent"
@@ -65,5 +63,14 @@
             android:lineSpacingExtra="2dp" />
 
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/ivLogo"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:src="@drawable/ic_launcher_foreground"
+        android:visibility="visible"
+        tools:layout_editor_absoluteX="182dp"
+        tools:layout_editor_absoluteY="448dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

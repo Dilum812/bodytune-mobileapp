@@ -15,7 +15,8 @@ import com.example.bodytunemobileapp.model.ScreenType
 
 class OnboardingAdapter(
     private val onboardingItems: List<OnboardingItem>,
-    private val onSignUpClick: () -> Unit = {}
+    private val onSignUpClick: () -> Unit = {},
+    private val onSignInClick: () -> Unit = {}
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     companion object {
@@ -50,7 +51,7 @@ class OnboardingAdapter(
                     parent,
                     false
                 )
-                SignUpViewHolder(binding)
+                SignUpViewHolder(binding, onSignInClick)
             }
             VIEW_TYPE_PROFILE_SETUP -> {
                 val binding = ItemProfileSetupBinding.inflate(
@@ -89,19 +90,17 @@ class OnboardingAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(onboardingItem: OnboardingItem) {
-            // Set up click listener for Sign Up link
-            binding.tvSignUpLink.setOnClickListener {
-                onSignUpClick()
-            }
+            binding.tvSignUpLink.setOnClickListener { onSignUpClick() }
         }
     }
 
     class SignUpViewHolder(
-        private val binding: ItemSignUpBinding
+        private val binding: ItemSignUpBinding,
+        private val onSignInClick: () -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(onboardingItem: OnboardingItem) {
-            // Sign up screen uses static content from layout
+            binding.tvSignInLink.setOnClickListener { onSignInClick() }
         }
     }
 
@@ -121,7 +120,6 @@ class OnboardingAdapter(
         fun bind(onboardingItem: OnboardingItem) {
             binding.ivOnboarding.setImageResource(onboardingItem.image)
             
-            // Handle HTML formatting in title
             if (onboardingItem.title.contains("<br/>")) {
                 binding.tvTitle.text = Html.fromHtml(onboardingItem.title, Html.FROM_HTML_MODE_COMPACT)
             } else {
@@ -130,7 +128,6 @@ class OnboardingAdapter(
             
             binding.tvDescription.text = onboardingItem.description
             
-            // Show logo if provided
             if (onboardingItem.logo != null) {
                 binding.ivLogo.setImageResource(onboardingItem.logo)
                 binding.ivLogo.visibility = View.VISIBLE
