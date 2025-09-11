@@ -139,7 +139,7 @@ class OnboardingAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(onboardingItem: OnboardingItem) {
-            binding.ivOnboarding.setImageResource(onboardingItem.image)
+            binding.ivBackground.setImageResource(onboardingItem.image)
             
             if (onboardingItem.title.contains("<br/>")) {
                 binding.tvTitle.text = Html.fromHtml(onboardingItem.title, Html.FROM_HTML_MODE_COMPACT)
@@ -150,8 +150,8 @@ class OnboardingAdapter(
             binding.tvDescription.text = onboardingItem.description
             
             if (onboardingItem.logo != null) {
-                binding.ivLogo.visibility = View.VISIBLE
                 binding.ivLogo.setImageResource(onboardingItem.logo)
+                binding.ivLogo.visibility = View.VISIBLE
             } else {
                 binding.ivLogo.visibility = View.GONE
             }

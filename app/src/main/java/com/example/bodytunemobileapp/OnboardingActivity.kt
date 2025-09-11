@@ -58,7 +58,7 @@ class OnboardingActivity : AppCompatActivity() {
             // Screen 2 - Welcome
             OnboardingItem(
                 image = R.drawable.onboarding_man_water,
-                logo = R.drawable.ic_launcher_foreground,
+                logo = R.drawable.tb_logo,
                 title = getString(R.string.welcome_title),
                 description = getString(R.string.welcome_description),
                 screenType = ScreenType.ONBOARDING
@@ -66,15 +66,15 @@ class OnboardingActivity : AppCompatActivity() {
             // Screen 3 - Smarter Tracking
             OnboardingItem(
                 image = R.drawable.onboarding_woman_earbuds,
-                logo = R.drawable.ic_launcher_foreground,
+                logo = R.drawable.tb_logo,
                 title = getString(R.string.smarter_tracking_title),
                 description = getString(R.string.smarter_tracking_description),
                 screenType = ScreenType.ONBOARDING
             ),
             // Screen 4 - Stay Motivated
             OnboardingItem(
-                image = R.drawable.onboarding_man_motivated,
-                logo = R.drawable.ic_launcher_foreground,
+                image = R.drawable.onboard3,
+                logo = R.drawable.tb_logo,
                 title = getString(R.string.stay_motivated_title),
                 description = getString(R.string.stay_motivated_description),
                 screenType = ScreenType.ONBOARDING
@@ -82,7 +82,7 @@ class OnboardingActivity : AppCompatActivity() {
             // Screen 4 - Sign In
             OnboardingItem(
                 image = R.drawable.onboarding_welcome,
-                logo = R.drawable.ic_launcher_foreground,
+                logo = R.drawable.tb_logo,
                 title = getString(R.string.sign_in_title),
                 description = getString(R.string.sign_in_subtitle),
                 screenType = ScreenType.SIGN_IN
@@ -90,7 +90,7 @@ class OnboardingActivity : AppCompatActivity() {
             // Screen 5 - Sign Up
             OnboardingItem(
                 image = R.drawable.onboarding_welcome,
-                logo = R.drawable.ic_launcher_foreground,
+                logo = R.drawable.tb_logo,
                 title = getString(R.string.sign_up_title),
                 description = getString(R.string.sign_up_subtitle),
                 screenType = ScreenType.SIGN_UP
@@ -98,7 +98,7 @@ class OnboardingActivity : AppCompatActivity() {
             // Screen 6 - Profile Setup
             OnboardingItem(
                 image = R.drawable.onboarding_welcome,
-                logo = R.drawable.ic_launcher_foreground,
+                logo = R.drawable.tb_logo,
                 title = getString(R.string.tell_us_about_yourself),
                 description = getString(R.string.profile_subtitle),
                 screenType = ScreenType.PROFILE_SETUP
@@ -106,7 +106,7 @@ class OnboardingActivity : AppCompatActivity() {
             // Screen 7 - Ready to Start
             OnboardingItem(
                 image = R.drawable.onboarding_ready,
-                logo = R.drawable.ic_launcher_foreground,
+                logo = R.drawable.tb_logo,
                 title = getString(R.string.ready_title),
                 description = getString(R.string.ready_description),
                 screenType = ScreenType.ONBOARDING

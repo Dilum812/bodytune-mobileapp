@@ -25,6 +25,18 @@
         <activity
             android:name=".MainActivity"
             android:exported="false" />
+            
+        <activity
+            android:name=".CalorieTrackerActivity"
+            android:exported="false" />
+            
+        <activity
+            android:name=".AddMealActivity"
+            android:exported="false" />
+            
+        <activity
+            android:name=".BMICalculatorActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

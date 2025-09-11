@@ -40,6 +40,11 @@ class MainActivity : AppCompatActivity() {
             // Navigate to calorie tracker screen
             startActivity(Intent(this, CalorieTrackerActivity::class.java))
         }
+        
+        binding.cardBMI.setOnClickListener {
+            // Navigate to BMI calculator screen
+            startActivity(Intent(this, BMICalculatorActivity::class.java))
+        }
     }
     
     override fun onWindowFocusChanged(hasFocus: Boolean) {

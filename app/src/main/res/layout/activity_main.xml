@@ -442,13 +442,17 @@
 
                 <!-- BMI Card -->
                 <LinearLayout
+                    android:id="@+id/cardBMI"
                     android:layout_width="0dp"
                     android:layout_height="100dp"
                     android:layout_weight="1"
                     android:layout_marginStart="8dp"
                     android:background="@drawable/input_background"
                     android:orientation="vertical"
-                    android:padding="16dp">
+                    android:padding="16dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?android:attr/selectableItemBackground">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -665,6 +669,46 @@
         </LinearLayout>
 
     </ScrollView>
+
+    <!-- Header -->
+    <LinearLayout
+        android:id="@+id/headerLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="24dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/tb_logo"
+            android:layout_marginEnd="12dp" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="BODYTUNE"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:fontFamily="sans-serif-medium" />
+
+        <ImageView
+            android:id="@+id/profileImage"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_profile_placeholder"
+            android:background="@drawable/circle_profile_background"
+            android:padding="2dp" />
+
+    </LinearLayout>
 
     <!-- Bottom Navigation -->
     <LinearLayout
