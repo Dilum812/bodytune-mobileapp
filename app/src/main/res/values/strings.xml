@@ -11,16 +11,16 @@
     <string name="app_tagline">Fitness, Perfectly in Sync.</string>
     
     <!-- Onboarding Screen 1 - Welcome -->
-    <string name="welcome_title">Welcome to Your Productive Journey</string>
+    <string name="welcome_title">Welcome to Your\nProductive Journey</string>
     <string name="welcome_description">Track fitness in one simple app.</string>
     
     <!-- Onboarding Screen 2 - Smarter Tracking -->
-    <string name="smarter_tracking_title">Smarter Tracking,<br/>Better Results</string>
+    <string name="smarter_tracking_title">Smarter Tracking,\nBetter Results</string>
     <string name="smarter_tracking_description">Log meals, runs, and BMI easily.</string>
     
-    <!-- Onboarding Screen 3 - Feature Screen -->
-    <string name="feature_title">Smarter Tracking,<br/>Better Results</string>
-    <string name="feature_description">Log meals, runs, and BMI easily.</string>
+    <!-- Onboarding Screen 3 - Stay Motivated -->
+    <string name="stay_motivated_title">Stay Consistent &amp;\nMotivated</string>
+    <string name="stay_motivated_description">Set goals and hit milestones.</string>
     
     <!-- Authentication Screens -->
     <string name="sign_in_title">Welcome Back</string>

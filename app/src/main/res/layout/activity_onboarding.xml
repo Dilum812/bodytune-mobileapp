@@ -6,86 +6,87 @@
     android:background="@color/black"
     android:fitsSystemWindows="true">
 
+    <!-- ViewPager2 for onboarding screens -->
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/viewPager"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/indicatorLayout"
+        app:layout_constraintBottom_toTopOf="@+id/bottomNavigation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Custom progress segments -->
+    <!-- Bottom Navigation Container -->
     <LinearLayout
-        android:id="@+id/indicatorLayout"
-        android:layout_width="wrap_content"
+        android:id="@+id/bottomNavigation"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:gravity="center"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="48dp"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@+id/buttonLayout"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        android:gravity="center_vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
-        <View
-            android:id="@+id/seg1"
-            android:layout_width="64dp"
-            android:layout_height="4dp"
-            android:background="@drawable/progress_active" />
+        <!-- Skip Button -->
+        <TextView
+            android:id="@+id/btnSkip"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/skip"
+            android:textColor="#B3FFFFFF"
+            android:textSize="16sp"
+            android:gravity="start"
+            android:padding="16dp"
+            android:clickable="true"
+            android:focusable="true" />
 
-        <View
-            android:id="@+id/segSpacer1"
-            android:layout_width="12dp"
-            android:layout_height="4dp"
-            android:background="@android:color/transparent" />
+        <!-- Progress Indicator Container -->
+        <LinearLayout
+            android:id="@+id/indicatorLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginEnd="16dp">
 
-        <View
-            android:id="@+id/seg2"
-            android:layout_width="12dp"
-            android:layout_height="4dp"
-            android:background="@drawable/progress_inactive" />
+            <View
+                android:id="@+id/seg1"
+                android:layout_width="24dp"
+                android:layout_height="4dp"
+                android:layout_marginEnd="8dp"
+                android:background="@color/blue_primary" />
 
-        <View
-            android:id="@+id/segSpacer2"
-            android:layout_width="12dp"
-            android:layout_height="4dp"
-            android:background="@android:color/transparent" />
+            <View
+                android:id="@+id/seg2"
+                android:layout_width="8dp"
+                android:layout_height="4dp"
+                android:layout_marginEnd="8dp"
+                android:background="#333333" />
 
-        <View
-            android:id="@+id/seg3"
-            android:layout_width="12dp"
-            android:layout_height="4dp"
-            android:background="@drawable/progress_inactive" />
+            <View
+                android:id="@+id/seg3"
+                android:layout_width="8dp"
+                android:layout_height="4dp"
+                android:background="#333333" />
 
-    </LinearLayout>
+        </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/buttonLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="24dp"
-        android:paddingBottom="32dp"
-        android:gravity="center"
-        app:layout_constraintBottom_toBottomOf="parent">
-
+        <!-- Next Button -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnNext"
-            style="@style/Widget.Material3.Button"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="56dp"
+            android:layout_weight="2"
             android:text="@string/next"
             android:textSize="16sp"
             android:textStyle="bold"
-            app:backgroundTint="@color/blue_primary"
-            app:cornerRadius="12dp" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnSkip"
-            style="@style/Widget.Material3.Button.TextButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/skip"
             android:textColor="@color/white"
-            android:textSize="16sp" />
+            app:backgroundTint="@color/blue_primary"
+            app:cornerRadius="16dp" />
 
     </LinearLayout>
 

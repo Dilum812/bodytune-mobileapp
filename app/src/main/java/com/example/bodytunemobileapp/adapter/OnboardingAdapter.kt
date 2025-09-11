@@ -10,6 +10,7 @@ import com.example.bodytunemobileapp.databinding.ItemOnboardingBinding
 import com.example.bodytunemobileapp.databinding.ItemSignInBinding
 import com.example.bodytunemobileapp.databinding.ItemSignUpBinding
 import com.example.bodytunemobileapp.databinding.ItemProfileSetupBinding
+import com.example.bodytunemobileapp.databinding.ItemSplashBinding
 import com.example.bodytunemobileapp.model.OnboardingItem
 import com.example.bodytunemobileapp.model.ScreenType
 
@@ -20,14 +21,16 @@ class OnboardingAdapter(
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     companion object {
-        private const val VIEW_TYPE_ONBOARDING = 0
-        private const val VIEW_TYPE_SIGN_IN = 1
-        private const val VIEW_TYPE_SIGN_UP = 2
-        private const val VIEW_TYPE_PROFILE_SETUP = 3
+        private const val VIEW_TYPE_SPLASH = 0
+        private const val VIEW_TYPE_ONBOARDING = 1
+        private const val VIEW_TYPE_SIGN_IN = 2
+        private const val VIEW_TYPE_SIGN_UP = 3
+        private const val VIEW_TYPE_PROFILE_SETUP = 4
     }
 
     override fun getItemViewType(position: Int): Int {
         return when (onboardingItems[position].screenType) {
+            ScreenType.SPLASH -> VIEW_TYPE_SPLASH
             ScreenType.ONBOARDING -> VIEW_TYPE_ONBOARDING
             ScreenType.SIGN_IN -> VIEW_TYPE_SIGN_IN
             ScreenType.SIGN_UP -> VIEW_TYPE_SIGN_UP
@@ -37,6 +40,14 @@ class OnboardingAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
+            VIEW_TYPE_SPLASH -> {
+                val binding = ItemSplashBinding.inflate(
+                    LayoutInflater.from(parent.context),
+                    parent,
+                    false
+                )
+                SplashViewHolder(binding)
+            }
             VIEW_TYPE_SIGN_IN -> {
                 val binding = ItemSignInBinding.inflate(
                     LayoutInflater.from(parent.context),
@@ -75,6 +86,7 @@ class OnboardingAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val item = onboardingItems[position]
         when (holder) {
+            is SplashViewHolder -> holder.bind(item)
             is SignInViewHolder -> holder.bind(item)
             is SignUpViewHolder -> holder.bind(item)
             is ProfileSetupViewHolder -> holder.bind(item)
@@ -83,6 +95,15 @@ class OnboardingAdapter(
     }
 
     override fun getItemCount(): Int = onboardingItems.size
+
+    class SplashViewHolder(
+        private val binding: ItemSplashBinding
+    ) : RecyclerView.ViewHolder(binding.root) {
+
+        fun bind(onboardingItem: OnboardingItem) {
+            // Splash screen uses static content from layout
+        }
+    }
 
     class SignInViewHolder(
         private val binding: ItemSignInBinding,
@@ -129,8 +150,8 @@ class OnboardingAdapter(
             binding.tvDescription.text = onboardingItem.description
             
             if (onboardingItem.logo != null) {
-                binding.ivLogo.setImageResource(onboardingItem.logo)
                 binding.ivLogo.visibility = View.VISIBLE
+                binding.ivLogo.setImageResource(onboardingItem.logo)
             } else {
                 binding.ivLogo.visibility = View.GONE
             }

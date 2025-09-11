@@ -1,8 +1,7 @@
 package com.example.bodytunemobileapp
 
+import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
@@ -16,13 +15,11 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         
-        // Set up mobile screen handling
-        setupMobileScreen()
-        
-        enableEdgeToEdge()
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         
+        // Set up mobile screen handling
+        setupMobileScreen()
         setupClickListeners()
     }
     
@@ -39,8 +36,9 @@ class MainActivity : AppCompatActivity() {
     }
     
     private fun setupClickListeners() {
-        binding.btnStartWorkout.setOnClickListener {
-            Toast.makeText(this, "Workout feature coming soon!", Toast.LENGTH_SHORT).show()
+        binding.btnStartTracking.setOnClickListener {
+            // Navigate to calorie tracker screen
+            startActivity(Intent(this, CalorieTrackerActivity::class.java))
         }
     }
     

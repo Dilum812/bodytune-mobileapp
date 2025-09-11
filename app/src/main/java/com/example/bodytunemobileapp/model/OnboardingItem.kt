@@ -1,6 +1,7 @@
 package com.example.bodytunemobileapp.model
 
 enum class ScreenType {
+    SPLASH,
     ONBOARDING,
     SIGN_IN,
     SIGN_UP,

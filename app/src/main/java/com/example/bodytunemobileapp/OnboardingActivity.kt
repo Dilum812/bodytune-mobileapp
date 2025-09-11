@@ -47,28 +47,36 @@ class OnboardingActivity : AppCompatActivity() {
     
     private fun setupOnboardingItems() {
         val onboardingItems = listOf(
-            // Screen 1 - Welcome
+            // Screen 1 - Splash
             OnboardingItem(
-                image = R.drawable.onboarding_welcome,
+                image = R.drawable.ic_launcher_foreground,
+                logo = null,
+                title = getString(R.string.app_title),
+                description = getString(R.string.app_tagline),
+                screenType = ScreenType.SPLASH
+            ),
+            // Screen 2 - Welcome
+            OnboardingItem(
+                image = R.drawable.onboarding_man_water,
                 logo = R.drawable.ic_launcher_foreground,
                 title = getString(R.string.welcome_title),
                 description = getString(R.string.welcome_description),
                 screenType = ScreenType.ONBOARDING
             ),
-            // Screen 2 - Smarter Tracking
+            // Screen 3 - Smarter Tracking
             OnboardingItem(
-                image = R.drawable.onboarding_workout,
+                image = R.drawable.onboarding_woman_earbuds,
                 logo = R.drawable.ic_launcher_foreground,
                 title = getString(R.string.smarter_tracking_title),
                 description = getString(R.string.smarter_tracking_description),
                 screenType = ScreenType.ONBOARDING
             ),
-            // Screen 3 - Smarter Tracking (different image)
+            // Screen 4 - Stay Motivated
             OnboardingItem(
-                image = R.drawable.onboarding_progress,
+                image = R.drawable.onboarding_man_motivated,
                 logo = R.drawable.ic_launcher_foreground,
-                title = getString(R.string.feature_title),
-                description = getString(R.string.feature_description),
+                title = getString(R.string.stay_motivated_title),
+                description = getString(R.string.stay_motivated_description),
                 screenType = ScreenType.ONBOARDING
             ),
             // Screen 4 - Sign In
