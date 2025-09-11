@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="100dp"
+    android:height="100dp"
+    android:viewportWidth="100"
+    android:viewportHeight="100">
+    
+    <!-- Banana shape -->
+    <path
+        android:fillColor="#FFD700"
+        android:pathData="M25,20 Q30,15 35,20 Q40,25 45,35 Q50,45 55,55 Q60,65 65,70 Q70,75 75,80 Q70,85 65,80 Q60,75 55,65 Q50,55 45,45 Q40,35 35,30 Q30,25 25,20 Z" />
+    
+    <!-- Banana lines -->
+    <path
+        android:fillColor="#FFA500"
+        android:strokeWidth="1"
+        android:pathData="M30,25 Q35,30 40,40 Q45,50 50,60 Q55,70 60,75" />
+</vector>

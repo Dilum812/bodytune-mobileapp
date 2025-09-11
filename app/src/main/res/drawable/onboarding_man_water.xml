@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="300dp"
+    android:height="400dp"
+    android:viewportWidth="300"
+    android:viewportHeight="400">
+    
+    <!-- Background -->
+    <path
+        android:fillColor="#1A1A1A"
+        android:pathData="M0,0 L300,0 L300,400 L0,400 Z" />
+    
+    <!-- Man's head -->
+    <path
+        android:fillColor="#D4A574"
+        android:pathData="M150,75 A25,25 0 1,1 150,125 A25,25 0 1,1 150,75 Z" />
+    
+    <!-- Hair -->
+    <path
+        android:pathData="M125,85 Q150,70 175,85 Q175,95 150,95 Q125,95 125,85"
+        android:fillColor="#2C1810" />
+    
+    <!-- Body -->
+    <path
+        android:fillColor="#1976D2"
+        android:pathData="M125,125 L175,125 L175,205 L125,205 Z" />
+    
+    <!-- Arms -->
+    <path
+        android:fillColor="#D4A574"
+        android:pathData="M105,135 L120,135 L120,185 L105,185 Z" />
+    
+    <path
+        android:fillColor="#D4A574"
+        android:pathData="M180,135 L195,135 L195,185 L180,185 Z" />
+    
+    <!-- Legs -->
+    <path
+        android:fillColor="#424242"
+        android:pathData="M135,205 L147,205 L147,265 L135,265 Z" />
+    
+    <path
+        android:fillColor="#424242"
+        android:pathData="M153,205 L165,205 L165,265 L153,265 Z" />
+    
+    <!-- Water bottle -->
+    <path
+        android:fillColor="#2196F3"
+        android:pathData="M200,145 L208,145 L208,170 L200,170 Z" />
+    
+    <!-- Water bottle cap -->
+    <path
+        android:fillColor="#1976D2"
+        android:pathData="M199,142 L209,142 L209,147 L199,147 Z" />
+    
+    <!-- Fitness elements -->
+    <path
+        android:fillColor="#2196F3"
+        android:pathData="M50,312 A8,8 0 1,1 50,328 A8,8 0 1,1 50,312 Z" />
+    
+    <path
+        android:fillColor="#2196F3"
+        android:pathData="M250,344 A6,6 0 1,1 250,356 A6,6 0 1,1 250,344 Z" />
+
+</vector>

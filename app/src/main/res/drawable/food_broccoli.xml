@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="100dp"
+    android:height="100dp"
+    android:viewportWidth="100"
+    android:viewportHeight="100">
+    
+    <!-- Broccoli florets -->
+    <path
+        android:fillColor="#228B22"
+        android:pathData="M30,25 Q35,20 40,25 Q45,20 50,25 Q55,20 60,25 Q65,20 70,25 Q70,35 65,40 Q60,45 55,40 Q50,45 45,40 Q40,45 35,40 Q30,35 30,25 Z" />
+    
+    <!-- Broccoli stem -->
+    <path
+        android:fillColor="#90EE90"
+        android:pathData="M45,40 L45,75 Q50,80 55,75 L55,40" />
+</vector>

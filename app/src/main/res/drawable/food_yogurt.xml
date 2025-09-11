@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="100dp"
+    android:height="100dp"
+    android:viewportWidth="100"
+    android:viewportHeight="100">
+    
+    <!-- Yogurt cup -->
+    <path
+        android:fillColor="#F5F5F5"
+        android:pathData="M25,25 L75,25 Q80,30 80,35 L80,70 Q80,75 75,80 L25,80 Q20,75 20,70 L20,35 Q20,30 25,25 Z" />
+    
+    <!-- Yogurt surface -->
+    <path
+        android:fillColor="#FFFACD"
+        android:pathData="M25,25 L75,25 Q75,30 70,32 L30,32 Q25,30 25,25 Z" />
+</vector>

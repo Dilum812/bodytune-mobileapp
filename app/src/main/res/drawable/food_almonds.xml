@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="100dp"
+    android:height="100dp"
+    android:viewportWidth="100"
+    android:viewportHeight="100">
+    
+    <!-- Almonds -->
+    <path
+        android:fillColor="#DEB887"
+        android:pathData="M25,30 Q30,25 35,30 Q30,35 25,30 M40,25 Q45,20 50,25 Q45,30 40,25 M55,35 Q60,30 65,35 Q60,40 55,35 M30,45 Q35,40 40,45 Q35,50 30,45 M50,40 Q55,35 60,40 Q55,45 50,40 M65,50 Q70,45 75,50 Q70,55 65,50 M35,60 Q40,55 45,60 Q40,65 35,60 M55,65 Q60,60 65,65 Q60,70 55,65" />
+</vector>
