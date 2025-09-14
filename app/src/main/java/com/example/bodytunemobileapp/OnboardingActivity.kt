@@ -1,5 +1,6 @@
 package com.example.bodytunemobileapp
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2
@@ -34,8 +35,9 @@ class OnboardingActivity : AppCompatActivity() {
     }
 
     private fun navigateToMainApp() {
-        // For now, just finish the onboarding
-        // Later you can navigate to MainActivity or other screens
+        // Navigate to Sign In screen after onboarding
+        val intent = Intent(this, SignInActivity::class.java)
+        startActivity(intent)
         finish()
     }
 }

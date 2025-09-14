@@ -30,13 +30,11 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="TB"
-            android:textColor="#4285F4"
-            android:textSize="32sp"
-            android:textStyle="bold"
+        <ImageView
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@drawable/icon"
+            android:scaleType="fitCenter"
             android:layout_marginBottom="24dp" />
 
         <TextView
