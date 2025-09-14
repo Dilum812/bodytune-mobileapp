@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="120"
+    android:viewportHeight="120">
+    
+    <!-- Background circle -->
+    <path
+        android:fillColor="#FF6B35"
+        android:pathData="M60,10 A50,50 0 1,1 60,110 A50,50 0 1,1 60,10 Z"/>
+    
+    <!-- Inner circle -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M60,25 A35,35 0 1,1 60,95 A35,35 0 1,1 60,25 Z"/>
+    
+    <!-- Fitness icon - dumbbell shape -->
+    <path
+        android:fillColor="#FF6B35"
+        android:pathData="M45,55 L75,55 L75,65 L45,65 Z"/>
+    <path
+        android:fillColor="#FF6B35"
+        android:pathData="M40,50 L50,50 L50,70 L40,70 Z"/>
+    <path
+        android:fillColor="#FF6B35"
+        android:pathData="M70,50 L80,50 L80,70 L70,70 Z"/>
+    <path
+        android:fillColor="#FF6B35"
+        android:pathData="M35,52 L45,52 L45,68 L35,68 Z"/>
+    <path
+        android:fillColor="#FF6B35"
+        android:pathData="M75,52 L85,52 L85,68 L75,68 Z"/>
+</vector>
