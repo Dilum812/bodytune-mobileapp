@@ -44,6 +44,12 @@
             android:theme="@style/AppTheme"
             android:screenOrientation="portrait" />
         
+        <activity
+            android:name=".BMICalculatorActivity"
+            android:exported="false"
+            android:theme="@style/AppTheme"
+            android:screenOrientation="portrait" />
+        
     </application>
 
 </manifest>

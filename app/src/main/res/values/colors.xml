@@ -5,4 +5,5 @@
     <color name="blue_primary">#FF2196F3</color>
     <color name="blue_dark">#FF1976D2</color>
     <color name="blue_light">#FFBBDEFB</color>
+    <color name="healthy_green">#4CAF50</color>
 </resources>
