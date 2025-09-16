@@ -1,0 +1,107 @@
+{
+  "rules": {
+    "users": {
+      "$uid": {
+        ".read": "$uid === auth.uid",
+        ".write": "$uid === auth.uid",
+        ".validate": "newData.hasChildren(['uid', 'email', 'createdAt', 'updatedAt'])",
+        "uid": {
+          ".validate": "newData.val() === auth.uid"
+        },
+        "email": {
+          ".validate": "newData.isString() && newData.val().length > 0"
+        },
+        "name": {
+          ".validate": "newData.isString()"
+        },
+        "age": {
+          ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 150"
+        },
+        "height": {
+          ".validate": "newData.isNumber() && newData.val() > 0 && newData.val() <= 300"
+        },
+        "weight": {
+          ".validate": "newData.isNumber() && newData.val() > 0 && newData.val() <= 1000"
+        },
+        "fitnessGoal": {
+          ".validate": "newData.isString()"
+        },
+        "activityLevel": {
+          ".validate": "newData.isString()"
+        },
+        "profileImageUrl": {
+          ".validate": "newData.isString()"
+        },
+        "createdAt": {
+          ".validate": "newData.isNumber()"
+        },
+        "updatedAt": {
+          ".validate": "newData.isNumber()"
+        }
+      }
+    },
+    "workouts": {
+      "$uid": {
+        ".read": "$uid === auth.uid",
+        ".write": "$uid === auth.uid",
+        "$sessionId": {
+          ".validate": "newData.hasChildren(['userId', 'workoutType', 'createdAt'])",
+          "userId": {
+            ".validate": "newData.val() === auth.uid"
+          },
+          "workoutType": {
+            ".validate": "newData.isString() && newData.val().length > 0"
+          },
+          "exerciseName": {
+            ".validate": "newData.isString()"
+          },
+          "duration": {
+            ".validate": "newData.isNumber() && newData.val() >= 0"
+          },
+          "caloriesBurned": {
+            ".validate": "newData.isNumber() && newData.val() >= 0"
+          },
+          "startTime": {
+            ".validate": "newData.isNumber()"
+          },
+          "endTime": {
+            ".validate": "newData.isNumber()"
+          },
+          "notes": {
+            ".validate": "newData.isString()"
+          },
+          "createdAt": {
+            ".validate": "newData.isNumber()"
+          }
+        }
+      }
+    },
+    "bmi_records": {
+      "$uid": {
+        ".read": "$uid === auth.uid",
+        ".write": "$uid === auth.uid",
+        "$recordId": {
+          ".validate": "newData.hasChildren(['userId', 'height', 'weight', 'bmiValue', 'timestamp'])",
+          "userId": {
+            ".validate": "newData.val() === auth.uid"
+          },
+          "height": {
+            ".validate": "newData.isNumber() && newData.val() > 0 && newData.val() <= 300"
+          },
+          "weight": {
+            ".validate": "newData.isNumber() && newData.val() > 0 && newData.val() <= 1000"
+          },
+          "bmiValue": {
+            ".validate": "newData.isNumber() && newData.val() > 0 && newData.val() <= 100"
+          },
+          "bmiCategory": {
+            ".validate": "newData.isString() && (newData.val() === 'Underweight' || newData.val() === 'Normal Weight' || newData.val() === 'Overweight' || newData.val() === 'Obese')"
+          },
+          "timestamp": {
+            ".validate": "newData.isNumber()"
+          }
+        }
+      }
+    }
+  }
+}
