@@ -1,0 +1,233 @@
+{
+  "rules": {
+    "users": {
+      "$uid": {
+        ".read": "$uid === auth.uid",
+        ".write": "$uid === auth.uid",
+        ".validate": "newData.hasChildren(['uid', 'email', 'createdAt', 'updatedAt'])",
+        "uid": {
+          ".validate": "newData.val() === auth.uid"
+        },
+        "email": {
+          ".validate": "newData.isString() && newData.val().length > 0"
+        },
+        "name": {
+          ".validate": "newData.isString()"
+        },
+        "age": {
+          ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 150"
+        },
+        "height": {
+          ".validate": "newData.isNumber() && newData.val() > 0 && newData.val() <= 300"
+        },
+        "weight": {
+          ".validate": "newData.isNumber() && newData.val() > 0 && newData.val() <= 1000"
+        },
+        "goalCalories": {
+          ".validate": "newData.isNumber() && newData.val() > 0 && newData.val() <= 10000"
+        },
+        "fitnessGoal": {
+          ".validate": "newData.isString()"
+        },
+        "activityLevel": {
+          ".validate": "newData.isString()"
+        },
+        "profileImageUrl": {
+          ".validate": "newData.isString()"
+        },
+        "createdAt": {
+          ".validate": "newData.isNumber()"
+        },
+        "updatedAt": {
+          ".validate": "newData.isNumber()"
+        }
+      }
+    },
+    "meal_entries": {
+      "$uid": {
+        ".read": "$uid === auth.uid",
+        ".write": "$uid === auth.uid",
+        "$date": {
+          ".validate": "$date.matches(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/)",
+          "$mealId": {
+            ".validate": "newData.hasChildren(['id', 'userId', 'foodName', 'quantity', 'mealType', 'date', 'timestamp', 'calories'])",
+            "id": {
+              ".validate": "newData.isString() && newData.val().length > 0"
+            },
+            "userId": {
+              ".validate": "newData.val() === auth.uid"
+            },
+            "foodId": {
+              ".validate": "newData.isString()"
+            },
+            "foodName": {
+              ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 100"
+            },
+            "quantity": {
+              ".validate": "newData.isNumber() && newData.val() > 0 && newData.val() <= 10000"
+            },
+            "mealType": {
+              ".validate": "newData.isString() && (newData.val() === 'BREAKFAST' || newData.val() === 'LUNCH' || newData.val() === 'DINNER' || newData.val() === 'SNACKS')"
+            },
+            "date": {
+              ".validate": "newData.isString() && newData.val().matches(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/) && newData.val() === $date"
+            },
+            "timestamp": {
+              ".validate": "newData.isNumber() && newData.val() > 0 && newData.val() <= (now + 86400000)"
+            },
+            "calories": {
+              ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 10000"
+            },
+            "protein": {
+              ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 1000"
+            },
+            "carbs": {
+              ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 1000"
+            },
+            "fat": {
+              ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 1000"
+            }
+          }
+        }
+      }
+    },
+    "bmi_records": {
+      "$uid": {
+        ".read": "$uid === auth.uid",
+        ".write": "$uid === auth.uid",
+        "$recordId": {
+          ".validate": "newData.hasChildren(['userId', 'height', 'weight', 'bmiValue', 'timestamp'])",
+          "userId": {
+            ".validate": "newData.val() === auth.uid"
+          },
+          "height": {
+            ".validate": "newData.isNumber() && newData.val() > 0 && newData.val() <= 300"
+          },
+          "weight": {
+            ".validate": "newData.isNumber() && newData.val() > 0 && newData.val() <= 1000"
+          },
+          "bmiValue": {
+            ".validate": "newData.isNumber() && newData.val() > 0 && newData.val() <= 100"
+          },
+          "bmiCategory": {
+            ".validate": "newData.isString() && (newData.val() === 'Underweight' || newData.val() === 'Normal Weight' || newData.val() === 'Overweight' || newData.val() === 'Obese')"
+          },
+          "timestamp": {
+            ".validate": "newData.isNumber() && newData.val() > 0 && newData.val() <= (now + 86400000)"
+          }
+        }
+      }
+    },
+    "workouts": {
+      "$uid": {
+        ".read": "$uid === auth.uid",
+        ".write": "$uid === auth.uid",
+        "$sessionId": {
+          ".validate": "newData.hasChildren(['userId', 'workoutType', 'createdAt'])",
+          "userId": {
+            ".validate": "newData.val() === auth.uid"
+          },
+          "workoutType": {
+            ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 50"
+          },
+          "exerciseName": {
+            ".validate": "newData.isString() && newData.val().length <= 100"
+          },
+          "duration": {
+            ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 86400000"
+          },
+          "caloriesBurned": {
+            ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 10000"
+          },
+          "startTime": {
+            ".validate": "newData.isNumber() && newData.val() > 0"
+          },
+          "endTime": {
+            ".validate": "newData.isNumber() && newData.val() > 0 && newData.val() >= newData.parent().child('startTime').val()"
+          },
+          "notes": {
+            ".validate": "newData.isString() && newData.val().length <= 500"
+          },
+          "createdAt": {
+            ".validate": "newData.isNumber() && newData.val() > 0 && newData.val() <= (now + 86400000)"
+          }
+        }
+      }
+    },
+    "running_sessions": {
+      "$uid": {
+        ".read": "$uid === auth.uid",
+        ".write": "$uid === auth.uid",
+        "$sessionId": {
+          ".validate": "newData.hasChildren(['userId', 'startTime', 'timestamp'])",
+          "userId": {
+            ".validate": "newData.val() === auth.uid"
+          },
+          "sessionId": {
+            ".validate": "newData.isString() && newData.val().length > 0"
+          },
+          "startTime": {
+            ".validate": "newData.isNumber() && newData.val() > 0"
+          },
+          "endTime": {
+            ".validate": "newData.isNumber() && newData.val() >= newData.parent().child('startTime').val()"
+          },
+          "duration": {
+            ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 86400000"
+          },
+          "distance": {
+            ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 1000"
+          },
+          "averagePace": {
+            ".validate": "newData.isString()"
+          },
+          "calories": {
+            ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 10000"
+          },
+          "route": {
+            "$pointIndex": {
+              ".validate": "newData.hasChildren(['latitude', 'longitude', 'timestamp'])",
+              "latitude": {
+                ".validate": "newData.isNumber() && newData.val() >= -90 && newData.val() <= 90"
+              },
+              "longitude": {
+                ".validate": "newData.isNumber() && newData.val() >= -180 && newData.val() <= 180"
+              },
+              "timestamp": {
+                ".validate": "newData.isNumber() && newData.val() > 0"
+              },
+              "elevation": {
+                ".validate": "newData.isNumber() && newData.val() >= -1000 && newData.val() <= 10000"
+              }
+            }
+          },
+          "stats": {
+            "maxSpeed": {
+              ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 100"
+            },
+            "averageSpeed": {
+              ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 100"
+            },
+            "elevationGain": {
+              ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 10000"
+            },
+            "heartRate": {
+              "$index": {
+                ".validate": "newData.isNumber() && newData.val() >= 30 && newData.val() <= 250"
+              }
+            }
+          },
+          "timestamp": {
+            ".validate": "newData.isNumber() && newData.val() > 0 && newData.val() <= (now + 86400000)"
+          }
+        }
+      }
+    },
+    "debug_test": {
+      "$uid": {
+        ".read": "$uid === auth.uid",
+        ".write": "$uid === auth.uid"
+      }
+    }
+  }
+}

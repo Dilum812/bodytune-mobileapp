@@ -1,0 +1,103 @@
+package com.example.bodytunemobileapp.utils
+
+import com.example.bodytunemobileapp.models.Food
+
+object FoodDatabase {
+    
+    private val foods = mutableListOf<Food>()
+    
+    init {
+        initializeFoodDatabase()
+    }
+    
+    private fun initializeFoodDatabase() {
+        foods.addAll(listOf(
+            // Grains & Cereals
+            Food("1", "Rice (White, Cooked)", 130.0, 2.7, 28.0, 0.3, "Grains"),
+            Food("2", "Rice (Brown, Cooked)", 112.0, 2.6, 22.0, 0.9, "Grains"),
+            Food("3", "Bread (White)", 265.0, 9.0, 49.0, 3.2, "Grains"),
+            Food("4", "Bread (Whole Wheat)", 247.0, 13.0, 41.0, 4.2, "Grains"),
+            Food("5", "Pasta (Cooked)", 131.0, 5.0, 25.0, 1.1, "Grains"),
+            Food("6", "Oats", 389.0, 16.9, 66.3, 6.9, "Grains"),
+            Food("7", "Quinoa (Cooked)", 120.0, 4.4, 22.0, 1.9, "Grains"),
+            
+            // Proteins
+            Food("8", "Chicken Breast (Grilled)", 165.0, 31.0, 0.0, 3.6, "Protein"),
+            Food("9", "Chicken Thigh", 209.0, 26.0, 0.0, 11.0, "Protein"),
+            Food("10", "Beef (Lean)", 250.0, 26.0, 0.0, 15.0, "Protein"),
+            Food("11", "Salmon", 208.0, 20.0, 0.0, 13.0, "Protein"),
+            Food("12", "Tuna", 144.0, 30.0, 0.0, 1.0, "Protein"),
+            Food("13", "Eggs", 155.0, 13.0, 1.1, 11.0, "Protein"),
+            Food("14", "Tofu", 76.0, 8.0, 1.9, 4.8, "Protein"),
+            Food("15", "Lentils (Cooked)", 116.0, 9.0, 20.0, 0.4, "Protein"),
+            
+            // Vegetables
+            Food("16", "Broccoli", 34.0, 2.8, 7.0, 0.4, "Vegetables"),
+            Food("17", "Spinach", 23.0, 2.9, 3.6, 0.4, "Vegetables"),
+            Food("18", "Carrot", 41.0, 0.9, 10.0, 0.2, "Vegetables"),
+            Food("19", "Tomato", 18.0, 0.9, 3.9, 0.2, "Vegetables"),
+            Food("20", "Bell Pepper", 31.0, 1.0, 7.0, 0.3, "Vegetables"),
+            Food("21", "Cucumber", 16.0, 0.7, 4.0, 0.1, "Vegetables"),
+            Food("22", "Onion", 40.0, 1.1, 9.3, 0.1, "Vegetables"),
+            
+            // Fruits
+            Food("23", "Apple", 52.0, 0.3, 14.0, 0.2, "Fruits"),
+            Food("24", "Banana", 89.0, 1.1, 23.0, 0.3, "Fruits"),
+            Food("25", "Orange", 47.0, 0.9, 12.0, 0.1, "Fruits"),
+            Food("26", "Grapes", 62.0, 0.6, 16.0, 0.2, "Fruits"),
+            Food("27", "Strawberry", 32.0, 0.7, 8.0, 0.3, "Fruits"),
+            Food("28", "Mango", 60.0, 0.8, 15.0, 0.4, "Fruits"),
+            
+            // Dairy
+            Food("29", "Milk (Whole)", 61.0, 3.2, 4.8, 3.3, "Dairy"),
+            Food("30", "Milk (Skim)", 34.0, 3.4, 5.0, 0.1, "Dairy"),
+            Food("31", "Yogurt (Plain)", 59.0, 10.0, 3.6, 0.4, "Dairy"),
+            Food("32", "Cheese (Cheddar)", 402.0, 25.0, 1.3, 33.0, "Dairy"),
+            Food("33", "Cottage Cheese", 98.0, 11.0, 3.4, 4.3, "Dairy"),
+            
+            // Nuts & Seeds
+            Food("34", "Almonds", 579.0, 21.0, 22.0, 50.0, "Nuts"),
+            Food("35", "Walnuts", 654.0, 15.0, 14.0, 65.0, "Nuts"),
+            Food("36", "Peanuts", 567.0, 26.0, 16.0, 49.0, "Nuts"),
+            Food("37", "Sunflower Seeds", 584.0, 21.0, 20.0, 51.0, "Nuts"),
+            
+            // Oils & Fats
+            Food("38", "Olive Oil", 884.0, 0.0, 0.0, 100.0, "Fats"),
+            Food("39", "Butter", 717.0, 0.9, 0.1, 81.0, "Fats"),
+            Food("40", "Avocado", 160.0, 2.0, 9.0, 15.0, "Fats"),
+            
+            // Snacks & Others
+            Food("41", "Potato (Baked)", 93.0, 2.1, 21.0, 0.1, "Vegetables"),
+            Food("42", "Sweet Potato", 86.0, 1.6, 20.0, 0.1, "Vegetables"),
+            Food("43", "Dark Chocolate (70%)", 546.0, 7.8, 46.0, 31.0, "Snacks"),
+            Food("44", "Honey", 304.0, 0.3, 82.0, 0.0, "Snacks"),
+            Food("45", "Granola", 471.0, 13.0, 61.0, 20.0, "Snacks")
+        ))
+    }
+    
+    fun getAllFoods(): List<Food> = foods.toList()
+    
+    fun searchFoods(query: String): List<Food> {
+        if (query.isBlank()) return foods.toList()
+        return foods.filter { 
+            it.name.contains(query, ignoreCase = true) || 
+            it.category.contains(query, ignoreCase = true) 
+        }
+    }
+    
+    fun getFoodById(id: String): Food? {
+        return foods.find { it.id == id }
+    }
+    
+    fun getFoodsByCategory(category: String): List<Food> {
+        return foods.filter { it.category.equals(category, ignoreCase = true) }
+    }
+    
+    fun getCategories(): List<String> {
+        return foods.map { it.category }.distinct().sorted()
+    }
+    
+    fun addFood(food: Food) {
+        foods.add(food)
+    }
+}

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="quantity_units">
+        <item>100g</item>
+        <item>1 cup</item>
+        <item>1 piece</item>
+        <item>1 serving</item>
+    </string-array>
+</resources>
