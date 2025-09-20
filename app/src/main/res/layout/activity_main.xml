@@ -234,6 +234,7 @@
 
         <!-- Daily Goal Card -->
         <androidx.cardview.widget.CardView
+            android:id="@+id/cardDailyGoal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -260,6 +261,7 @@
                     android:background="@drawable/circular_progress_background" />
 
                 <TextView
+                    android:id="@+id/tvCaloriesConsumed"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="1,850"
@@ -269,6 +271,7 @@
                     android:layout_marginTop="4dp" />
 
                 <TextView
+                    android:id="@+id/tvCaloriesGoal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="/ 2,200"
@@ -409,13 +412,17 @@
 
         <!-- BMI Card -->
         <androidx.cardview.widget.CardView
+            android:id="@+id/bmiCard"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:layout_marginStart="8dp"
             app:cardBackgroundColor="#1A1A1A"
             app:cardCornerRadius="16dp"
-            app:cardElevation="0dp">
+            app:cardElevation="0dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?android:attr/selectableItemBackground">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -432,6 +439,7 @@
                     android:textStyle="bold" />
 
                 <TextView
+                    android:id="@+id/tvBMICategory"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Healthy Range"
@@ -440,6 +448,7 @@
                     android:layout_marginTop="2dp" />
 
                 <TextView
+                    android:id="@+id/tvBMIValue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="22.4"
@@ -449,6 +458,7 @@
                     android:layout_marginTop="4dp" />
 
                 <ProgressBar
+                    android:id="@+id/bmiProgressBar"
                     android:layout_width="match_parent"
                     android:layout_height="3dp"
                     style="?android:attr/progressBarStyleHorizontal"

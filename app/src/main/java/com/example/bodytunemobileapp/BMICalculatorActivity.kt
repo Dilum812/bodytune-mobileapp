@@ -84,9 +84,31 @@ class BMICalculatorActivity : AppCompatActivity() {
     }
 
     private fun setDefaultValues() {
-        etHeight.setText("175")
-        etWeight.setText("68")
-        calculateBMI()
+        // Load saved BMI data or use defaults
+        loadLatestBMIData()
+    }
+    
+    private fun loadLatestBMIData() {
+        val userId = FirebaseHelper.getCurrentUserId()
+        if (userId != null) {
+            FirebaseHelper.getLatestBMIRecord(userId) { bmiRecord, error ->
+                if (bmiRecord != null) {
+                    etHeight.setText(bmiRecord.height.toInt().toString())
+                    etWeight.setText(bmiRecord.weight.toInt().toString())
+                    calculateBMI()
+                } else {
+                    // Use default values
+                    etHeight.setText("175")
+                    etWeight.setText("68")
+                    calculateBMI()
+                }
+            }
+        } else {
+            // User not logged in, use default values
+            etHeight.setText("175")
+            etWeight.setText("68")
+            calculateBMI()
+        }
     }
 
     private fun calculateBMI() {
@@ -115,6 +137,15 @@ class BMICalculatorActivity : AppCompatActivity() {
             tvBMICategory.text = category
             tvBMIDescription.text = description
             tvBMICategory.setTextColor(getColor(color))
+            
+            // Set background color based on BMI category
+            val backgroundDrawable = when {
+                bmi < 18.5 -> R.drawable.bmi_warning_background
+                bmi < 25.0 -> R.drawable.bmi_good_background
+                bmi < 30.0 -> R.drawable.bmi_warning_background
+                else -> R.drawable.bmi_danger_background
+            }
+            tvBMICategory.setBackgroundResource(backgroundDrawable)
 
             // Save BMI record to Firebase
             saveBMIRecord(heightText.toDouble(), weight, bmi, category)
@@ -129,22 +160,22 @@ class BMICalculatorActivity : AppCompatActivity() {
             bmi < 18.5 -> Triple(
                 "Underweight",
                 "Your BMI indicates you're underweight. Consider consulting a healthcare provider for guidance on healthy weight gain.",
-                android.R.color.holo_orange_light
+                R.color.bmi_warning_orange
             )
             bmi < 25.0 -> Triple(
                 "Normal Weight",
                 "Your BMI indicates you're at a healthy weight. Maintain a balanced diet and regular exercise.",
-                R.color.healthy_green
+                R.color.bmi_good_green
             )
             bmi < 30.0 -> Triple(
                 "Overweight",
                 "Your BMI indicates you're overweight. Consider a balanced diet and increased physical activity.",
-                android.R.color.holo_orange_light
+                R.color.bmi_warning_orange
             )
             else -> Triple(
                 "Obese",
                 "Your BMI indicates obesity. Consider consulting a healthcare provider for personalized guidance.",
-                android.R.color.holo_red_light
+                R.color.bmi_danger_red
             )
         }
     }
@@ -164,6 +195,7 @@ class BMICalculatorActivity : AppCompatActivity() {
             FirebaseHelper.saveBMIRecord(bmiRecord) { success, error ->
                 if (success) {
                     Toast.makeText(this, "BMI record saved!", Toast.LENGTH_SHORT).show()
+                    // Data will be automatically refreshed in MainActivity via onResume()
                 } else {
                     Toast.makeText(this, "Failed to save BMI record: $error", Toast.LENGTH_SHORT).show()
                 }

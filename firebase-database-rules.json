@@ -102,6 +102,53 @@
           }
         }
       }
+    },
+    "meal_entries": {
+      "$uid": {
+        ".read": "$uid === auth.uid",
+        ".write": "$uid === auth.uid",
+        "$date": {
+          "$mealId": {
+            ".validate": "newData.hasChildren(['id', 'userId', 'foodName', 'quantity', 'mealType', 'date', 'timestamp', 'calories'])",
+            "id": {
+              ".validate": "newData.isString() && newData.val().length > 0"
+            },
+            "userId": {
+              ".validate": "newData.val() === auth.uid"
+            },
+            "foodId": {
+              ".validate": "newData.isString()"
+            },
+            "foodName": {
+              ".validate": "newData.isString() && newData.val().length > 0"
+            },
+            "quantity": {
+              ".validate": "newData.isNumber() && newData.val() > 0 && newData.val() <= 10000"
+            },
+            "mealType": {
+              ".validate": "newData.isString() && (newData.val() === 'BREAKFAST' || newData.val() === 'LUNCH' || newData.val() === 'DINNER' || newData.val() === 'SNACKS')"
+            },
+            "date": {
+              ".validate": "newData.isString() && newData.val().matches(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/)"
+            },
+            "timestamp": {
+              ".validate": "newData.isNumber() && newData.val() > 0"
+            },
+            "calories": {
+              ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 10000"
+            },
+            "protein": {
+              ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 1000"
+            },
+            "carbs": {
+              ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 1000"
+            },
+            "fat": {
+              ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 1000"
+            }
+          }
+        }
+      }
     }
   }
 }

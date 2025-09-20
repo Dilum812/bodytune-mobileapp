@@ -146,6 +146,26 @@ class FirebaseHelper {
             }
         }
         
+        fun getLatestBMIRecord(userId: String, callback: (BMIRecord?, String?) -> Unit) {
+            bmiRecordsRef.child(userId)
+                .orderByChild("timestamp")
+                .limitToLast(1)
+                .addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        var latestRecord: BMIRecord? = null
+                        for (recordSnapshot in snapshot.children) {
+                            latestRecord = recordSnapshot.getValue(BMIRecord::class.java)
+                            break // Get the first (and only) record
+                        }
+                        callback(latestRecord, null)
+                    }
+                    
+                    override fun onCancelled(error: DatabaseError) {
+                        callback(null, error.message)
+                    }
+                })
+        }
+        
         // Real-time listeners
         fun addWorkoutSessionListener(callback: (List<WorkoutSession>) -> Unit): DatabaseReference? {
             val userId = getCurrentUserId()

@@ -6,15 +6,21 @@ import android.view.WindowManager
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.ProgressBar
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.cardview.widget.CardView
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import com.example.bodytunemobileapp.firebase.FirebaseHelper
+import com.example.bodytunemobileapp.models.BMIRecord
 import com.example.bodytunemobileapp.utils.ProfilePictureLoader
+import com.example.bodytunemobileapp.utils.CalorieTracker
 import com.example.bodytunemobileapp.auth.GoogleSignInHelper
+import kotlin.math.pow
 
 class MainActivity : AppCompatActivity() {
 
@@ -26,6 +32,26 @@ class MainActivity : AppCompatActivity() {
     private lateinit var navTrain: LinearLayout
     private lateinit var navBMI: LinearLayout
     private lateinit var workoutsSection: LinearLayout
+    
+    // BMI Calculator views
+    private lateinit var bmiCard: CardView
+    private lateinit var tvBMIValue: TextView
+    private lateinit var tvBMICategory: TextView
+    private lateinit var bmiProgressBar: ProgressBar
+    
+    // Calorie Tracker views
+    private lateinit var cardDailyGoal: CardView
+    private lateinit var progressDaily: ProgressBar
+    private lateinit var tvCaloriesConsumed: TextView
+    private lateinit var tvCaloriesGoal: TextView
+    
+    // Current BMI data
+    private var currentHeight: Double = 175.0
+    private var currentWeight: Double = 68.0
+    private var currentBMI: Double = 0.0
+    
+    // Calorie tracker
+    private lateinit var calorieTracker: CalorieTracker
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,6 +68,13 @@ class MainActivity : AppCompatActivity() {
         
         // Load profile picture
         loadProfilePicture()
+        
+        // Initialize BMI calculator
+        initializeBMICalculator()
+        
+        // Initialize calorie tracker
+        calorieTracker = CalorieTracker()
+        loadCalorieData()
     }
 
     private fun initializeViews() {
@@ -53,6 +86,18 @@ class MainActivity : AppCompatActivity() {
         navTrain = findViewById(R.id.navTrain)
         navBMI = findViewById(R.id.navBMI)
         workoutsSection = findViewById(R.id.workoutsSection)
+        
+        // BMI views
+        bmiCard = findViewById(R.id.bmiCard)
+        tvBMIValue = findViewById(R.id.tvBMIValue)
+        tvBMICategory = findViewById(R.id.tvBMICategory)
+        bmiProgressBar = findViewById(R.id.bmiProgressBar)
+        
+        // Calorie tracker views
+        cardDailyGoal = findViewById(R.id.cardDailyGoal)
+        progressDaily = findViewById(R.id.progressDaily)
+        tvCaloriesConsumed = findViewById(R.id.tvCaloriesConsumed)
+        tvCaloriesGoal = findViewById(R.id.tvCaloriesGoal)
     }
 
     private fun setupFullScreen() {
@@ -68,9 +113,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupClickListeners() {
-        // Start tracking button - Test Firebase connection
+        // Quick Run button click
         btnStartTracking.setOnClickListener {
-            FirebaseConnectionTest.quickTest(this)
+            val intent = Intent(this, RunningTrackerFreeActivity::class.java)
+            startActivity(intent)
         }
 
         // Profile image click
@@ -84,11 +130,13 @@ class MainActivity : AppCompatActivity() {
         }
 
         navMeals.setOnClickListener {
-            // TODO: Navigate to meals screen
+            val intent = Intent(this, CalorieTrackerActivity::class.java)
+            startActivity(intent)
         }
 
         navRun.setOnClickListener {
-            // TODO: Navigate to run screen
+            val intent = Intent(this, RunningTrackerFreeActivity::class.java)
+            startActivity(intent)
         }
 
         navTrain.setOnClickListener {
@@ -98,6 +146,18 @@ class MainActivity : AppCompatActivity() {
 
         navBMI.setOnClickListener {
             val intent = Intent(this, BMICalculatorActivity::class.java)
+            startActivity(intent)
+        }
+        
+        // BMI card click
+        bmiCard.setOnClickListener {
+            val intent = Intent(this, BMICalculatorActivity::class.java)
+            startActivity(intent)
+        }
+        
+        // Daily Goal card click
+        cardDailyGoal.setOnClickListener {
+            val intent = Intent(this, CalorieTrackerActivity::class.java)
             startActivity(intent)
         }
 
@@ -150,10 +210,107 @@ class MainActivity : AppCompatActivity() {
         finish()
     }
 
+    private fun initializeBMICalculator() {
+        // Load saved BMI data or calculate with default values
+        loadLatestBMIRecord()
+    }
+    
+    private fun loadLatestBMIRecord() {
+        val userId = FirebaseHelper.getCurrentUserId()
+        if (userId != null) {
+            FirebaseHelper.getLatestBMIRecord(userId) { bmiRecord, error ->
+                if (bmiRecord != null) {
+                    currentHeight = bmiRecord.height
+                    currentWeight = bmiRecord.weight
+                    currentBMI = bmiRecord.bmiValue
+                    updateBMIDisplay(currentBMI, bmiRecord.bmiCategory)
+                } else {
+                    // Use default values and calculate
+                    calculateAndUpdateBMI()
+                }
+            }
+        } else {
+            // User not logged in, use default values
+            calculateAndUpdateBMI()
+        }
+    }
+    
+    private fun calculateAndUpdateBMI() {
+        val heightInMeters = currentHeight / 100
+        currentBMI = currentWeight / (heightInMeters.pow(2))
+        val category = getBMICategory(currentBMI)
+        updateBMIDisplay(currentBMI, category)
+    }
+    
+    private fun updateBMIDisplay(bmi: Double, category: String) {
+        val bmiRounded = String.format("%.1f", bmi)
+        tvBMIValue.text = bmiRounded
+        tvBMICategory.text = category
+        
+        // Update color based on category using the new BMI color system
+        val (color, progress) = when (category) {
+            "Underweight" -> Pair(getColor(R.color.bmi_warning_orange), 25)
+            "Normal Weight" -> Pair(getColor(R.color.bmi_good_green), 60)
+            "Overweight" -> Pair(getColor(R.color.bmi_warning_orange), 80)
+            "Obese" -> Pair(getColor(R.color.bmi_danger_red), 95)
+            else -> Pair(getColor(R.color.bmi_good_green), 60)
+        }
+        
+        tvBMICategory.setTextColor(color)
+        bmiProgressBar.progress = progress
+    }
+    
+    private fun getBMICategory(bmi: Double): String {
+        return when {
+            bmi < 18.5 -> "Underweight"
+            bmi < 25.0 -> "Normal Weight"
+            bmi < 30.0 -> "Overweight"
+            else -> "Obese"
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Reload BMI data when returning from BMI Calculator
+        loadLatestBMIRecord()
+        // Reload calorie data when returning from calorie tracker
+        loadCalorieData()
+    }
+
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
         if (hasFocus) {
             setupFullScreen()
         }
+    }
+
+    private fun loadCalorieData() {
+        calorieTracker.getUserGoalCalories(
+            onSuccess = { goalCalories ->
+                calorieTracker.getTodaysMeals(
+                    onSuccess = { meals ->
+                        val dailyNutrition = calorieTracker.calculateDailyNutrition(meals, goalCalories)
+                        updateCalorieDisplay(dailyNutrition.totalCalories, goalCalories)
+                    },
+                    onError = {
+                        // Show default values on error
+                        updateCalorieDisplay(0.0, 2200.0)
+                    }
+                )
+            },
+            onError = {
+                // Show default values on error
+                updateCalorieDisplay(0.0, 2200.0)
+            }
+        )
+    }
+
+    private fun updateCalorieDisplay(consumedCalories: Double, goalCalories: Double) {
+        val remainingCalories = goalCalories - consumedCalories
+        val progressPercentage = ((consumedCalories / goalCalories) * 100).toInt().coerceIn(0, 100)
+        
+        tvCaloriesConsumed.text = String.format("%.0f", consumedCalories)
+        tvCaloriesGoal.text = "/ ${goalCalories.toInt()}"
+        progressDaily.progress = progressPercentage
     }
 }

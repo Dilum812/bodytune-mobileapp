@@ -67,6 +67,12 @@ dependencies {
     // Image loading
     implementation(libs.glide)
     
+    // OpenStreetMap (Free alternative to Google Maps)
+    implementation("org.osmdroid:osmdroid-android:6.1.17")
+    
+    // Location Services (still needed for GPS)
+    implementation("com.google.android.gms:play-services-location:21.0.1")
+    
     // Test dependencies
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

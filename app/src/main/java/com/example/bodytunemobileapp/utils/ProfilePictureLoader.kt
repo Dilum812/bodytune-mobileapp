@@ -40,14 +40,14 @@ class ProfilePictureLoader {
                     .load(profilePhotoUrl)
                     .apply(RequestOptions()
                         .transform(CircleCrop())
-                        .placeholder(R.drawable.ic_profile_placeholder)
-                        .error(R.drawable.ic_profile_placeholder)
+                        .placeholder(R.drawable.profile_placeholder)
+                        .error(R.drawable.profile_placeholder)
                     )
                     .into(imageView)
             } else {
                 // Load default placeholder
                 Glide.with(context)
-                    .load(R.drawable.ic_profile_placeholder)
+                    .load(R.drawable.profile_placeholder)
                     .apply(RequestOptions().transform(CircleCrop()))
                     .into(imageView)
             }

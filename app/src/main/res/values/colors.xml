@@ -6,4 +6,21 @@
     <color name="blue_dark">#FF1976D2</color>
     <color name="blue_light">#FFBBDEFB</color>
     <color name="healthy_green">#4CAF50</color>
+    <color name="warning_orange">#FF9800</color>
+    <color name="danger_red">#F44336</color>
+    <color name="bmi_good_green">#4CAF50</color>
+    <color name="bmi_warning_orange">#FF9800</color>
+    <color name="bmi_danger_red">#F44336</color>
+    
+    <!-- Additional colors for calorie tracker -->
+    <color name="blue">#2196F3</color>
+    <color name="purple">#9C27B0</color>
+    <color name="green">#4CAF50</color>
+    <color name="green_light">#81C784</color>
+    <color name="orange">#FF9800</color>
+    <color name="gray_light">#B0BEC5</color>
+    <color name="gray_dark">#37474F</color>
+    <color name="dark_gray">#2C2C2C</color>
+    <color name="dark_gray_transparent">#CC2C2C2C</color>
+    <color name="black_overlay">#CC000000</color>
 </resources>
