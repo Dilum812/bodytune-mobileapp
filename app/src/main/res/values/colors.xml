@@ -23,4 +23,8 @@
     <color name="dark_gray">#2C2C2C</color>
     <color name="dark_gray_transparent">#CC2C2C2C</color>
     <color name="black_overlay">#CC000000</color>
+    
+    <!-- Calendar colors -->
+    <color name="calendar_text">#888888</color>
+    <color name="disabled_text">#555555</color>
 </resources>

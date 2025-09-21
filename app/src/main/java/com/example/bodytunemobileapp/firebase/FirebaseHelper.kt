@@ -6,6 +6,7 @@ import com.google.firebase.database.*
 import com.example.bodytunemobileapp.models.User
 import com.example.bodytunemobileapp.models.WorkoutSession
 import com.example.bodytunemobileapp.models.BMIRecord
+import com.example.bodytunemobileapp.models.DailyData
 
 class FirebaseHelper {
     
@@ -17,6 +18,7 @@ class FirebaseHelper {
         private val usersRef: DatabaseReference = database.getReference("users")
         private val workoutsRef: DatabaseReference = database.getReference("workouts")
         private val bmiRecordsRef: DatabaseReference = database.getReference("bmi_records")
+        private val dailyDataRef: DatabaseReference = database.getReference("daily_data")
         
         // Authentication methods
         fun getCurrentUser(): FirebaseUser? = auth.currentUser
@@ -193,6 +195,112 @@ class FirebaseHelper {
         
         fun removeListener(reference: DatabaseReference, listener: ValueEventListener) {
             reference.removeEventListener(listener)
+        }
+        
+        // Daily data methods
+        fun saveDailyData(dailyData: DailyData, callback: (Boolean, String?) -> Unit) {
+            val userId = getCurrentUserId()
+            if (userId != null) {
+                dailyDataRef.child(userId).child(dailyData.date).setValue(dailyData)
+                    .addOnSuccessListener {
+                        callback(true, null)
+                    }
+                    .addOnFailureListener { exception ->
+                        callback(false, exception.message)
+                    }
+            } else {
+                callback(false, "User not authenticated")
+            }
+        }
+        
+        fun getDailyData(date: String, callback: (DailyData?, String?) -> Unit) {
+            val userId = getCurrentUserId()
+            if (userId != null) {
+                dailyDataRef.child(userId).child(date)
+                    .addListenerForSingleValueEvent(object : ValueEventListener {
+                        override fun onDataChange(snapshot: DataSnapshot) {
+                            val dailyData = snapshot.getValue(DailyData::class.java)
+                            callback(dailyData, null)
+                        }
+                        
+                        override fun onCancelled(error: DatabaseError) {
+                            callback(null, error.message)
+                        }
+                    })
+            } else {
+                callback(null, "User not authenticated")
+            }
+        }
+        
+        fun getDailyDataForDateRange(startDate: String, endDate: String, callback: (List<DailyData>?, String?) -> Unit) {
+            val userId = getCurrentUserId()
+            if (userId != null) {
+                dailyDataRef.child(userId)
+                    .orderByKey()
+                    .startAt(startDate)
+                    .endAt(endDate)
+                    .addListenerForSingleValueEvent(object : ValueEventListener {
+                        override fun onDataChange(snapshot: DataSnapshot) {
+                            val dailyDataList = mutableListOf<DailyData>()
+                            for (dataSnapshot in snapshot.children) {
+                                val dailyData = dataSnapshot.getValue(DailyData::class.java)
+                                dailyData?.let { dailyDataList.add(it) }
+                            }
+                            callback(dailyDataList, null)
+                        }
+                        
+                        override fun onCancelled(error: DatabaseError) {
+                            callback(null, error.message)
+                        }
+                    })
+            } else {
+                callback(null, "User not authenticated")
+            }
+        }
+        
+        fun updateDailyDataField(date: String, field: String, value: Any, callback: (Boolean, String?) -> Unit) {
+            val userId = getCurrentUserId()
+            if (userId != null) {
+                val updates = mapOf(
+                    field to value,
+                    "updatedAt" to System.currentTimeMillis()
+                )
+                
+                dailyDataRef.child(userId).child(date).updateChildren(updates)
+                    .addOnSuccessListener {
+                        callback(true, null)
+                    }
+                    .addOnFailureListener { exception ->
+                        callback(false, exception.message)
+                    }
+            } else {
+                callback(false, "User not authenticated")
+            }
+        }
+        
+        fun getOrCreateDailyData(date: String, callback: (DailyData?, String?) -> Unit) {
+            getDailyData(date) { existingData, error ->
+                if (existingData != null) {
+                    callback(existingData, null)
+                } else if (error == null) {
+                    // No data exists, create default
+                    val userId = getCurrentUserId()
+                    if (userId != null) {
+                        val defaultData = DailyData.createDefault(date, userId)
+                        saveDailyData(defaultData) { success, saveError ->
+                            if (success) {
+                                callback(defaultData, null)
+                            } else {
+                                callback(null, saveError)
+                            }
+                        }
+                    } else {
+                        callback(null, "User not authenticated")
+                    }
+                } else {
+                    callback(null, error)
+                }
+            }
         }
     }
 }

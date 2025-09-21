@@ -223,6 +223,81 @@
         }
       }
     },
+    "daily_data": {
+      "$uid": {
+        ".read": "$uid === auth.uid",
+        ".write": "$uid === auth.uid",
+        "$date": {
+          ".validate": "$date.matches(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/)",
+          "date": {
+            ".validate": "newData.isString() && newData.val().matches(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/) && newData.val() === $date"
+          },
+          "userId": {
+            ".validate": "newData.val() === auth.uid"
+          },
+          "caloriesConsumed": {
+            ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 20000"
+          },
+          "caloriesGoal": {
+            ".validate": "newData.isNumber() && newData.val() > 0 && newData.val() <= 20000"
+          },
+          "workoutsCompleted": {
+            ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 50"
+          },
+          "workoutMinutes": {
+            ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 1440"
+          },
+          "plannedWorkout": {
+            ".validate": "newData.isString() && newData.val().length <= 100"
+          },
+          "plannedWorkoutDuration": {
+            ".validate": "newData.isString() && newData.val().length <= 50"
+          },
+          "plannedWorkoutExercises": {
+            ".validate": "newData.isString() && newData.val().length <= 50"
+          },
+          "runningDistance": {
+            ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 1000"
+          },
+          "runningDuration": {
+            ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 1440"
+          },
+          "runningCalories": {
+            ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 10000"
+          },
+          "hasRunToday": {
+            ".validate": "newData.isBoolean()"
+          },
+          "bmiValue": {
+            ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 100"
+          },
+          "bmiCategory": {
+            ".validate": "newData.isString() && (newData.val() === '' || newData.val() === 'Underweight' || newData.val() === 'Normal Weight' || newData.val() === 'Overweight' || newData.val() === 'Obese')"
+          },
+          "height": {
+            ".validate": "newData.isNumber() && newData.val() > 0 && newData.val() <= 300"
+          },
+          "weight": {
+            ".validate": "newData.isNumber() && newData.val() > 0 && newData.val() <= 1000"
+          },
+          "streakDays": {
+            ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 10000"
+          },
+          "totalCaloriesBurned": {
+            ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 100000"
+          },
+          "totalWorkouts": {
+            ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 10000"
+          },
+          "createdAt": {
+            ".validate": "newData.isNumber() && newData.val() > 0"
+          },
+          "updatedAt": {
+            ".validate": "newData.isNumber() && newData.val() > 0"
+          }
+        }
+      }
+    },
     "debug_test": {
       "$uid": {
         ".read": "$uid === auth.uid",

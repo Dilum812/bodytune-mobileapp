@@ -19,8 +19,11 @@ import com.example.bodytunemobileapp.firebase.FirebaseHelper
 import com.example.bodytunemobileapp.models.BMIRecord
 import com.example.bodytunemobileapp.utils.ProfilePictureLoader
 import com.example.bodytunemobileapp.utils.CalorieTracker
+import com.example.bodytunemobileapp.utils.CalendarManager
+import com.example.bodytunemobileapp.models.DailyData
 import com.example.bodytunemobileapp.auth.GoogleSignInHelper
 import kotlin.math.pow
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -52,6 +55,12 @@ class MainActivity : AppCompatActivity() {
     
     // Calorie tracker
     private lateinit var calorieTracker: CalorieTracker
+    
+    // Calendar functionality
+    private var selectedDate: Date = CalendarManager.getCurrentDate()
+    private var currentDailyData: DailyData? = null
+    private val calendarDays = mutableListOf<Date>()
+    private val calendarViews = mutableListOf<LinearLayout>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,7 +83,12 @@ class MainActivity : AppCompatActivity() {
         
         // Initialize calorie tracker
         calorieTracker = CalorieTracker()
-        loadCalorieData()
+        
+        // Initialize calendar
+        initializeCalendar()
+        
+        // Load data for selected date
+        loadDataForSelectedDate()
     }
 
     private fun initializeViews() {
@@ -271,10 +285,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        // Reload BMI data when returning from BMI Calculator
-        loadLatestBMIRecord()
-        // Reload calorie data when returning from calorie tracker
-        loadCalorieData()
+        // Reload data for selected date
+        loadDataForSelectedDate()
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
@@ -282,6 +294,239 @@ class MainActivity : AppCompatActivity() {
         if (hasFocus) {
             setupFullScreen()
         }
+    }
+
+    private fun initializeCalendar() {
+        // Get the last 7 days including today
+        calendarDays.clear()
+        calendarDays.addAll(CalendarManager.getLast7Days())
+        
+        // ALWAYS select today's date by default
+        selectedDate = CalendarManager.getCurrentDate()
+        
+        // Find calendar layout and get all day views
+        val calendarLayout = findViewById<LinearLayout>(R.id.calendarLayout)
+        calendarViews.clear()
+        
+        // Get all day LinearLayouts from the calendar
+        for (i in 0 until calendarLayout.childCount) {
+            val dayView = calendarLayout.getChildAt(i) as LinearLayout
+            calendarViews.add(dayView)
+        }
+        
+        // Update calendar with real dates
+        updateCalendarDisplay()
+        
+        // Set up click listeners for calendar days
+        setupCalendarClickListeners()
+        
+        // Show current date info to user
+        showSelectedDateInfo()
+    }
+    
+    private fun updateCalendarDisplay() {
+        for (i in calendarDays.indices) {
+            if (i < calendarViews.size) {
+                val dayView = calendarViews[i]
+                val date = calendarDays[i]
+                
+                // Get day name and number TextViews
+                val dayNameView = dayView.getChildAt(0) as TextView
+                val dayNumberView = dayView.getChildAt(1) as TextView
+                
+                // Update with real date
+                dayNameView.text = CalendarManager.getDayName(date)
+                dayNumberView.text = CalendarManager.getDayNumber(date)
+                
+                // Update appearance based on date status
+                updateDayViewAppearance(dayView, date)
+            }
+        }
+    }
+    
+    private fun updateDayViewAppearance(dayView: LinearLayout, date: Date) {
+        val dayNameView = dayView.getChildAt(0) as TextView
+        val dayNumberView = dayView.getChildAt(1) as TextView
+        
+        when {
+            CalendarManager.isToday(date) && date == selectedDate -> {
+                // Today and selected - highlight with blue background
+                dayView.setBackgroundResource(R.drawable.selected_day_background)
+                dayNameView.setTextColor(getColor(android.R.color.white))
+                dayNumberView.setTextColor(getColor(android.R.color.white))
+                dayNumberView.setTypeface(null, android.graphics.Typeface.BOLD)
+                
+                // Add "TODAY" indicator
+                dayNameView.text = "TODAY"
+            }
+            date == selectedDate -> {
+                // Selected but not today
+                dayView.setBackgroundResource(R.drawable.selected_day_background)
+                dayNameView.setTextColor(getColor(android.R.color.white))
+                dayNumberView.setTextColor(getColor(android.R.color.white))
+                dayNumberView.setTypeface(null, android.graphics.Typeface.BOLD)
+            }
+            CalendarManager.isToday(date) -> {
+                // Today but not selected - show with emphasis
+                dayView.background = null
+                dayNameView.setTextColor(getColor(R.color.blue_primary))
+                dayNumberView.setTextColor(getColor(R.color.blue_primary))
+                dayNumberView.setTypeface(null, android.graphics.Typeface.BOLD)
+                dayView.isClickable = true
+                
+                // Add "TODAY" indicator
+                dayNameView.text = "TODAY"
+            }
+            CalendarManager.isFutureDate(date) -> {
+                // Future date - disabled
+                dayView.background = null
+                dayNameView.setTextColor(getColor(R.color.disabled_text))
+                dayNumberView.setTextColor(getColor(R.color.disabled_text))
+                dayNumberView.setTypeface(null, android.graphics.Typeface.NORMAL)
+                dayView.isClickable = false
+            }
+            else -> {
+                // Past date - available
+                dayView.background = null
+                dayNameView.setTextColor(getColor(R.color.calendar_text))
+                dayNumberView.setTextColor(getColor(R.color.calendar_text))
+                dayNumberView.setTypeface(null, android.graphics.Typeface.NORMAL)
+                dayView.isClickable = true
+            }
+        }
+        
+        // Load progress indicator for this date (async)
+        loadProgressIndicatorForDate(dayView, date)
+    }
+    
+    private fun loadProgressIndicatorForDate(dayView: LinearLayout, date: Date) {
+        // Only show progress for past dates and today
+        if (!CalendarManager.isFutureDate(date)) {
+            val dateString = CalendarManager.formatDateForStorage(date)
+            
+            FirebaseHelper.getDailyData(dateString) { dailyData, error ->
+                if (dailyData != null) {
+                    // Add subtle progress indicator
+                    val dayNumberView = dayView.getChildAt(1) as TextView
+                    
+                    if (dailyData.isCompleteFitnessDay()) {
+                        // Show completion indicator (green dot or checkmark)
+                        dayNumberView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.ic_check_small)
+                    } else if (dailyData.getDailyGoalProgress() > 0) {
+                        // Show partial progress indicator
+                        dayNumberView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.ic_progress_dot)
+                    }
+                }
+            }
+        }
+    }
+    
+    private fun setupCalendarClickListeners() {
+        for (i in calendarDays.indices) {
+            if (i < calendarViews.size) {
+                val dayView = calendarViews[i]
+                val date = calendarDays[i]
+                
+                dayView.setOnClickListener {
+                    if (!CalendarManager.isFutureDate(date)) {
+                        selectDate(date)
+                    }
+                }
+            }
+        }
+    }
+    
+    private fun selectDate(date: Date) {
+        selectedDate = date
+        updateCalendarDisplay()
+        showSelectedDateInfo()
+        loadDataForSelectedDate()
+    }
+    
+    private fun showSelectedDateInfo() {
+        val dateDescription = CalendarManager.getDateDescription(selectedDate)
+        val dateString = CalendarManager.formatDateForStorage(selectedDate)
+        
+        // You can add a Toast or update a TextView to show selected date
+        // For now, we'll use a subtle toast for user feedback
+        if (!CalendarManager.isToday(selectedDate)) {
+            Toast.makeText(this, "Viewing data for $dateDescription", Toast.LENGTH_SHORT).show()
+        }
+    }
+    
+    private fun loadDataForSelectedDate() {
+        val dateString = CalendarManager.formatDateForStorage(selectedDate)
+        
+        FirebaseHelper.getOrCreateDailyData(dateString) { dailyData, error ->
+            if (dailyData != null) {
+                currentDailyData = dailyData
+                updateUIWithDailyData(dailyData)
+            } else {
+                // Handle error or show default data
+                showDefaultData()
+            }
+        }
+    }
+    
+    private fun updateUIWithDailyData(dailyData: DailyData) {
+        // Update calorie display with progress
+        updateCalorieDisplay(dailyData.caloriesConsumed, dailyData.caloriesGoal)
+        
+        // Update BMI display if available
+        if (dailyData.bmiValue > 0) {
+            updateBMIDisplay(dailyData.bmiValue, dailyData.bmiCategory)
+        } else {
+            // Load latest BMI record as fallback
+            loadLatestBMIRecord()
+        }
+        
+        // Update workout plan display with progress indicators
+        updateWorkoutPlanDisplay(dailyData)
+        
+        // Update progress indicators
+        updateProgressIndicators(dailyData)
+    }
+    
+    private fun updateProgressIndicators(dailyData: DailyData) {
+        // Calculate daily progress score
+        val progressScore = dailyData.getDailyScore()
+        
+        // Update daily goal progress bar
+        val goalProgress = dailyData.getDailyGoalProgress()
+        progressDaily.progress = goalProgress
+        
+        // Show progress feedback based on selected date
+        if (CalendarManager.isToday(selectedDate)) {
+            // Today's progress
+            if (goalProgress >= 100) {
+                // Goal achieved today
+                tvCaloriesConsumed.setTextColor(getColor(R.color.bmi_good_green))
+            } else if (goalProgress >= 75) {
+                // Good progress
+                tvCaloriesConsumed.setTextColor(getColor(R.color.bmi_warning_orange))
+            } else {
+                // Normal progress
+                tvCaloriesConsumed.setTextColor(getColor(android.R.color.white))
+            }
+        } else {
+            // Historical data - show completion status
+            if (dailyData.isCompleteFitnessDay()) {
+                tvCaloriesConsumed.setTextColor(getColor(R.color.bmi_good_green))
+            } else {
+                tvCaloriesConsumed.setTextColor(getColor(R.color.calendar_text))
+            }
+        }
+    }
+    
+    private fun updateWorkoutPlanDisplay(dailyData: DailyData) {
+        // This can be expanded to show different workout plans based on the day
+        // For now, we'll keep the existing display
+    }
+    
+    private fun showDefaultData() {
+        // Show default values when no data is available
+        updateCalorieDisplay(0.0, 2200.0)
+        loadLatestBMIRecord()
     }
 
     private fun loadCalorieData() {
