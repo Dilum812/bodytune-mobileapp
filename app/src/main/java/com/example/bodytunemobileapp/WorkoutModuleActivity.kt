@@ -11,6 +11,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import com.example.bodytunemobileapp.data.ExerciseCategory
 import com.example.bodytunemobileapp.utils.ModernNotification
+import com.example.bodytunemobileapp.utils.SmartAnimations
 
 class WorkoutModuleActivity : AppCompatActivity() {
 
@@ -36,6 +37,9 @@ class WorkoutModuleActivity : AppCompatActivity() {
 
         // Set up click listeners
         setupClickListeners()
+        
+        // Animate UI entrance
+        animateUIEntrance()
     }
 
     private fun initializeViews() {
@@ -64,57 +68,99 @@ class WorkoutModuleActivity : AppCompatActivity() {
 
     private fun setupClickListeners() {
         ivBack.setOnClickListener {
-            finish()
+            SmartAnimations.animateButtonPress(ivBack) {
+                finish()
+            }
         }
 
         ivProfile.setOnClickListener {
+            SmartAnimations.animateBounce(ivProfile)
             // TODO: Navigate to profile screen
         }
 
-        // Workout category click listeners
+        // Workout category click listeners with animations
         cardCardio.setOnClickListener {
-            navigateToExerciseList(ExerciseCategory.CARDIO_ENDURANCE)
+            SmartAnimations.animateCardPress(cardCardio) {
+                navigateToExerciseList(ExerciseCategory.CARDIO_ENDURANCE)
+            }
         }
 
         cardStrength.setOnClickListener {
-            navigateToExerciseList(ExerciseCategory.STRENGTH_TRAINING)
+            SmartAnimations.animateCardPress(cardStrength) {
+                navigateToExerciseList(ExerciseCategory.STRENGTH_TRAINING)
+            }
         }
 
         cardCore.setOnClickListener {
-            navigateToExerciseList(ExerciseCategory.CORE_ABS)
+            SmartAnimations.animateCardPress(cardCore) {
+                navigateToExerciseList(ExerciseCategory.CORE_ABS)
+            }
         }
 
         cardFlexibility.setOnClickListener {
-            navigateToExerciseList(ExerciseCategory.FLEXIBILITY_MOBILITY)
+            SmartAnimations.animateCardPress(cardFlexibility) {
+                navigateToExerciseList(ExerciseCategory.FLEXIBILITY_MOBILITY)
+            }
         }
 
         cardHIIT.setOnClickListener {
-            navigateToExerciseList(ExerciseCategory.HIIT)
+            SmartAnimations.animateCardPress(cardHIIT) {
+                navigateToExerciseList(ExerciseCategory.HIIT)
+            }
         }
 
         cardYoga.setOnClickListener {
-            navigateToExerciseList(ExerciseCategory.YOGA)
+            SmartAnimations.animateCardPress(cardYoga) {
+                navigateToExerciseList(ExerciseCategory.YOGA)
+            }
         }
 
         cardPilates.setOnClickListener {
-            navigateToExerciseList(ExerciseCategory.PILATES)
+            SmartAnimations.animateCardPress(cardPilates) {
+                navigateToExerciseList(ExerciseCategory.PILATES)
+            }
         }
+    }
+    
+    private fun animateUIEntrance() {
+        // Animate header
+        SmartAnimations.animateViewEntrance(findViewById(R.id.headerLayout), delay = 0L)
+        
+        // Animate workout cards with stagger
+        SmartAnimations.animateViewEntrance(cardCardio, delay = 100L)
+        SmartAnimations.animateViewEntrance(cardStrength, delay = 200L)
+        SmartAnimations.animateViewEntrance(cardCore, delay = 300L)
+        SmartAnimations.animateViewEntrance(cardFlexibility, delay = 400L)
+        SmartAnimations.animateViewEntrance(cardHIIT, delay = 500L)
+        SmartAnimations.animateViewEntrance(cardYoga, delay = 600L)
+        SmartAnimations.animateViewEntrance(cardPilates, delay = 700L)
     }
 
     private fun navigateToExerciseList(category: ExerciseCategory) {
-        val categoryName = when(category) {
-            ExerciseCategory.CARDIO_ENDURANCE -> "Cardio"
-            ExerciseCategory.STRENGTH_TRAINING -> "Strength Training"
-            ExerciseCategory.CORE_ABS -> "Core & Abs"
-            ExerciseCategory.FLEXIBILITY_MOBILITY -> "Flexibility"
-            ExerciseCategory.HIIT -> "HIIT"
-            ExerciseCategory.YOGA -> "Yoga"
-            ExerciseCategory.PILATES -> "Pilates"
+        try {
+            val categoryName = when(category) {
+                ExerciseCategory.CARDIO_ENDURANCE -> "Cardio"
+                ExerciseCategory.STRENGTH_TRAINING -> "Strength Training"
+                ExerciseCategory.CORE_ABS -> "Core & Abs"
+                ExerciseCategory.FLEXIBILITY_MOBILITY -> "Flexibility"
+                ExerciseCategory.HIIT -> "HIIT"
+                ExerciseCategory.YOGA -> "Yoga"
+                ExerciseCategory.PILATES -> "Pilates"
+            }
+            
+            ModernNotification.showInfo(this, "Starting $categoryName workout")
+            
+            val intent = Intent(this, ExerciseListActivity::class.java)
+            intent.putExtra("category", category.name)
+            intent.putExtra("categoryDisplayName", categoryName)
+            startActivity(intent)
+            
+            // Add smooth transition
+            overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
+            
+        } catch (e: Exception) {
+            ModernNotification.showError(this, "Unable to load workout category. Please try again.")
         }
-        ModernNotification.showInfo(this, "Starting $categoryName workout")
-        val intent = Intent(this, ExerciseListActivity::class.java)
-        intent.putExtra("category", category.name)
-        startActivity(intent)
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {

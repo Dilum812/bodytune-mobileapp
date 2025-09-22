@@ -570,15 +570,19 @@
             android:layout_height="match_parent"
             android:orientation="horizontal">
 
-            <!-- 30 Days Achievement -->
+            <!-- Achievement Card 1 -->
             <androidx.cardview.widget.CardView
+                android:id="@+id/achievementCard1"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:layout_marginEnd="6dp"
                 app:cardBackgroundColor="#1A1A1A"
                 app:cardCornerRadius="16dp"
-                app:cardElevation="0dp">
+                app:cardElevation="0dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -588,31 +592,38 @@
                     android:padding="12dp">
 
                     <ImageView
+                        android:id="@+id/achievementIcon1"
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:src="@drawable/ic_medal"
                         android:tint="#4285F4" />
 
                     <TextView
+                        android:id="@+id/achievementTitle1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="30 Days"
+                        android:text="7 Day Streak"
                         android:textColor="@android:color/white"
                         android:textSize="12sp"
                         android:textStyle="bold"
-                        android:layout_marginTop="6dp" />
+                        android:layout_marginTop="6dp"
+                        android:gravity="center"
+                        android:maxLines="2"
+                        android:ellipsize="end" />
 
                     <TextView
+                        android:id="@+id/achievementProgress1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="28/30"
+                        android:text="5/7"
                         android:textColor="#888888"
                         android:textSize="10sp" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- Calories Achievement -->
+            <!-- Achievement Card 2 -->
             <androidx.cardview.widget.CardView
+                android:id="@+id/achievementCard2"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -620,7 +631,10 @@
                 android:layout_marginEnd="3dp"
                 app:cardBackgroundColor="#1A1A1A"
                 app:cardCornerRadius="16dp"
-                app:cardElevation="0dp">
+                app:cardElevation="0dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -630,38 +644,48 @@
                     android:padding="12dp">
 
                     <ImageView
+                        android:id="@+id/achievementIcon2"
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:src="@drawable/ic_fire"
                         android:tint="#FF5722" />
 
                     <TextView
+                        android:id="@+id/achievementTitle2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Calories"
+                        android:text="Calorie Master"
                         android:textColor="@android:color/white"
                         android:textSize="12sp"
                         android:textStyle="bold"
-                        android:layout_marginTop="6dp" />
+                        android:layout_marginTop="6dp"
+                        android:gravity="center"
+                        android:maxLines="2"
+                        android:ellipsize="end" />
 
                     <TextView
+                        android:id="@+id/achievementProgress2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="1.8k/2k"
+                        android:text="3/7"
                         android:textColor="#888888"
                         android:textSize="10sp" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- Workouts Achievement -->
+            <!-- Achievement Card 3 -->
             <androidx.cardview.widget.CardView
+                android:id="@+id/achievementCard3"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:layout_marginStart="6dp"
                 app:cardBackgroundColor="#1A1A1A"
                 app:cardCornerRadius="16dp"
-                app:cardElevation="0dp">
+                app:cardElevation="0dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -671,24 +695,30 @@
                     android:padding="12dp">
 
                     <ImageView
+                        android:id="@+id/achievementIcon3"
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:src="@drawable/ic_trophy"
                         android:tint="#9C27B0" />
 
                     <TextView
+                        android:id="@+id/achievementTitle3"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Workouts"
+                        android:text="Fitness Pro"
                         android:textColor="@android:color/white"
                         android:textSize="12sp"
                         android:textStyle="bold"
-                        android:layout_marginTop="6dp" />
+                        android:layout_marginTop="6dp"
+                        android:gravity="center"
+                        android:maxLines="2"
+                        android:ellipsize="end" />
 
                     <TextView
+                        android:id="@+id/achievementProgress3"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="12/15"
+                        android:text="8/10"
                         android:textColor="#888888"
                         android:textSize="10sp" />
                 </LinearLayout>

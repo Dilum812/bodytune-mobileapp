@@ -300,6 +300,24 @@
         }
       }
     },
+    "achievements": {
+      "$uid": {
+        ".read": "$uid === auth.uid",
+        ".write": "$uid === auth.uid",
+        "$achievementId": {
+          ".validate": "newData.hasChildren(['currentValue', 'isCompleted', 'unlockedAt'])",
+          "currentValue": {
+            ".validate": "newData.isNumber() && newData.val() >= 0"
+          },
+          "isCompleted": {
+            ".validate": "newData.isBoolean()"
+          },
+          "unlockedAt": {
+            ".validate": "newData.isNumber() && newData.val() >= 0"
+          }
+        }
+      }
+    },
     "debug_test": {
       "$uid": {
         ".read": "$uid === auth.uid",

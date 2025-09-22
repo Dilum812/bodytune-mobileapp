@@ -12,17 +12,18 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
+import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import com.example.bodytunemobileapp.firebase.FirebaseHelper
 import com.example.bodytunemobileapp.models.BMIRecord
-import com.example.bodytunemobileapp.utils.ProfilePictureLoader
-import com.example.bodytunemobileapp.utils.CalorieTracker
-import com.example.bodytunemobileapp.utils.CalendarManager
 import com.example.bodytunemobileapp.models.DailyData
-import com.example.bodytunemobileapp.auth.GoogleSignInHelper
+import com.example.bodytunemobileapp.utils.AchievementModal
+import com.example.bodytunemobileapp.utils.CalendarManager
 import com.example.bodytunemobileapp.utils.ModernNotification
+import com.example.bodytunemobileapp.utils.ProfilePictureLoader
+import com.example.bodytunemobileapp.utils.SmartAnimations
 import kotlin.math.pow
 import java.util.*
 
@@ -43,6 +44,20 @@ class MainActivity : AppCompatActivity() {
     private lateinit var tvBMICategory: TextView
     private lateinit var bmiProgressBar: ProgressBar
     
+    // Achievement UI components
+    private lateinit var achievementCard1: CardView
+    private lateinit var achievementCard2: CardView
+    private lateinit var achievementCard3: CardView
+    private lateinit var achievementIcon1: ImageView
+    private lateinit var achievementIcon2: ImageView
+    private lateinit var achievementIcon3: ImageView
+    private lateinit var achievementTitle1: TextView
+    private lateinit var achievementTitle2: TextView
+    private lateinit var achievementTitle3: TextView
+    private lateinit var achievementProgress1: TextView
+    private lateinit var achievementProgress2: TextView
+    private lateinit var achievementProgress3: TextView
+    
     // Calorie Tracker views
     private lateinit var cardDailyGoal: CardView
     private lateinit var progressDaily: ProgressBar
@@ -54,14 +69,14 @@ class MainActivity : AppCompatActivity() {
     private var currentWeight: Double = 68.0
     private var currentBMI: Double = 0.0
     
-    // Calorie tracker
-    private lateinit var calorieTracker: CalorieTracker
-    
-    // Calendar functionality
-    private var selectedDate: Date = CalendarManager.getCurrentDate()
+    // Current selected date
+    private var selectedDate: String = CalendarManager.formatDateForStorage(Date())
     private var currentDailyData: DailyData? = null
     private val calendarDays = mutableListOf<Date>()
     private val calendarViews = mutableListOf<LinearLayout>()
+    
+    // Achievement modal
+    private lateinit var achievementModal: AchievementModal
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -82,14 +97,19 @@ class MainActivity : AppCompatActivity() {
         // Initialize BMI calculator
         initializeBMICalculator()
         
-        // Initialize calorie tracker
-        calorieTracker = CalorieTracker()
+        // Initialize achievement modal
+        achievementModal = AchievementModal(this)
+        
+        // Initialize calorie tracking (handled by FirebaseHelper)
         
         // Initialize calendar
         initializeCalendar()
         
         // Load data for selected date
         loadDataForSelectedDate()
+        
+        // Animate UI entrance
+        animateUIEntrance()
     }
 
     private fun initializeViews() {
@@ -113,6 +133,20 @@ class MainActivity : AppCompatActivity() {
         progressDaily = findViewById(R.id.progressDaily)
         tvCaloriesConsumed = findViewById(R.id.tvCaloriesConsumed)
         tvCaloriesGoal = findViewById(R.id.tvCaloriesGoal)
+        
+        // Achievement views
+        achievementCard1 = findViewById(R.id.achievementCard1)
+        achievementCard2 = findViewById(R.id.achievementCard2)
+        achievementCard3 = findViewById(R.id.achievementCard3)
+        achievementIcon1 = findViewById(R.id.achievementIcon1)
+        achievementIcon2 = findViewById(R.id.achievementIcon2)
+        achievementIcon3 = findViewById(R.id.achievementIcon3)
+        achievementTitle1 = findViewById(R.id.achievementTitle1)
+        achievementTitle2 = findViewById(R.id.achievementTitle2)
+        achievementTitle3 = findViewById(R.id.achievementTitle3)
+        achievementProgress1 = findViewById(R.id.achievementProgress1)
+        achievementProgress2 = findViewById(R.id.achievementProgress2)
+        achievementProgress3 = findViewById(R.id.achievementProgress3)
     }
 
     private fun setupFullScreen() {
@@ -128,58 +162,84 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupClickListeners() {
-        // Quick Run button click
+        // Quick Run button with animation
         btnStartTracking.setOnClickListener {
-            val intent = Intent(this, QuickRunActivity::class.java)
-            startActivity(intent)
+            SmartAnimations.animateButtonPress(btnStartTracking) {
+                val intent = Intent(this, QuickRunActivity::class.java)
+                startActivity(intent)
+                overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
+            }
         }
 
-        // Profile image click
+        // Profile image click with animation
         ivProfile.setOnClickListener {
+            SmartAnimations.animateBounce(ivProfile)
             showProfileMenu()
         }
 
-        // Bottom navigation clicks
+        // Bottom navigation clicks with animations
         navHome.setOnClickListener {
+            SmartAnimations.animateButtonPress(navHome)
             // Already on home screen
         }
 
         navMeals.setOnClickListener {
-            val intent = Intent(this, CalorieTrackerActivity::class.java)
-            startActivity(intent)
+            SmartAnimations.animateButtonPress(navMeals) {
+                val intent = Intent(this, CalorieTrackerActivity::class.java)
+                startActivity(intent)
+                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+            }
         }
 
         navRun.setOnClickListener {
-            val intent = Intent(this, RunningTrackerFreeActivity::class.java)
-            startActivity(intent)
+            SmartAnimations.animateButtonPress(navRun) {
+                val intent = Intent(this, RunningTrackerFreeActivity::class.java)
+                startActivity(intent)
+                overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
+            }
         }
 
         navTrain.setOnClickListener {
-            val intent = Intent(this, WorkoutModuleActivity::class.java)
-            startActivity(intent)
+            SmartAnimations.animateButtonPress(navTrain) {
+                val intent = Intent(this, WorkoutModuleActivity::class.java)
+                startActivity(intent)
+                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+            }
         }
 
         navBMI.setOnClickListener {
-            val intent = Intent(this, BMICalculatorActivity::class.java)
-            startActivity(intent)
+            SmartAnimations.animateButtonPress(navBMI) {
+                val intent = Intent(this, BMICalculatorActivity::class.java)
+                startActivity(intent)
+                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+            }
         }
         
-        // BMI card click
+        // BMI card click with animation
         bmiCard.setOnClickListener {
-            val intent = Intent(this, BMICalculatorActivity::class.java)
-            startActivity(intent)
+            SmartAnimations.animateCardPress(bmiCard) {
+                val intent = Intent(this, BMICalculatorActivity::class.java)
+                startActivity(intent)
+                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+            }
         }
         
-        // Daily Goal card click
+        // Daily Goal card click with animation
         cardDailyGoal.setOnClickListener {
-            val intent = Intent(this, CalorieTrackerActivity::class.java)
-            startActivity(intent)
+            SmartAnimations.animateCardPress(cardDailyGoal) {
+                val intent = Intent(this, CalorieTrackerActivity::class.java)
+                startActivity(intent)
+                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+            }
         }
-
-        // Workouts section click
+        
+        // Workouts section click with animation
         workoutsSection.setOnClickListener {
-            val intent = Intent(this, WorkoutModuleActivity::class.java)
-            startActivity(intent)
+            SmartAnimations.animateButtonPress(workoutsSection) {
+                val intent = Intent(this, WorkoutModuleActivity::class.java)
+                startActivity(intent)
+                overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
+            }
         }
     }
 
@@ -206,13 +266,15 @@ class MainActivity : AppCompatActivity() {
             .setTitle("Sign Out")
             .setMessage("Are you sure you want to sign out?")
             .setPositiveButton("Yes") { _, _ ->
-                // Sign out from both Firebase and Google
-                val googleSignInHelper = GoogleSignInHelper(this)
-                googleSignInHelper.signOut {
-                    FirebaseHelper.signOut()
-                    ModernNotification.showSuccess(this, "Signed out successfully")
-                    navigateToSignIn()
-                }
+                // Sign out from Firebase
+                FirebaseHelper.signOut()
+                ModernNotification.showSuccess(this, "Signed out successfully")
+                
+                // Navigate to sign-in screen
+                val intent = Intent(this, SignInActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)
+                finish()
             }
             .setNegativeButton("No", null)
             .show()
@@ -259,20 +321,24 @@ class MainActivity : AppCompatActivity() {
     
     private fun updateBMIDisplay(bmi: Double, category: String) {
         val bmiRounded = String.format("%.1f", bmi)
-        tvBMIValue.text = bmiRounded
-        tvBMICategory.text = category
+        
+        // Animate BMI value and category changes
+        SmartAnimations.animateTextChange(tvBMIValue, bmiRounded)
+        SmartAnimations.animateTextChange(tvBMICategory, category)
         
         // Update color based on category using the new BMI color system
         val (color, progress) = when (category) {
-            "Underweight" -> Pair(getColor(R.color.bmi_warning_orange), 25)
-            "Normal Weight" -> Pair(getColor(R.color.bmi_good_green), 60)
-            "Overweight" -> Pair(getColor(R.color.bmi_warning_orange), 80)
-            "Obese" -> Pair(getColor(R.color.bmi_danger_red), 95)
-            else -> Pair(getColor(R.color.bmi_good_green), 60)
+            "Underweight" -> Pair(ContextCompat.getColor(this, R.color.bmi_warning_orange), 25)
+            "Normal Weight" -> Pair(ContextCompat.getColor(this, R.color.bmi_good_green), 60)
+            "Overweight" -> Pair(ContextCompat.getColor(this, R.color.bmi_warning_orange), 80)
+            "Obese" -> Pair(ContextCompat.getColor(this, R.color.bmi_danger_red), 95)
+            else -> Pair(ContextCompat.getColor(this, R.color.bmi_good_green), 60)
         }
         
         tvBMICategory.setTextColor(color)
-        bmiProgressBar.progress = progress
+        
+        // Animate progress bar
+        SmartAnimations.animateProgressBar(bmiProgressBar, progress)
     }
     
     private fun getBMICategory(bmi: Double): String {
@@ -296,6 +362,32 @@ class MainActivity : AppCompatActivity() {
             setupFullScreen()
         }
     }
+    
+    private fun animateUIEntrance() {
+        // Animate header elements
+        SmartAnimations.animateViewEntrance(findViewById(R.id.headerLayout), delay = 0L)
+        
+        // Animate calendar with stagger
+        SmartAnimations.animateViewEntrance(findViewById(R.id.calendarLayout), delay = 100L)
+        
+        // Animate stats cards with stagger
+        SmartAnimations.animateViewEntrance(findViewById(R.id.statsRow1), delay = 200L)
+        SmartAnimations.animateViewEntrance(findViewById(R.id.statsRow2), delay = 300L)
+        
+        // Animate workouts section
+        SmartAnimations.animateViewEntrance(findViewById(R.id.workoutsSection), delay = 400L)
+        
+        // Animate achievements section
+        SmartAnimations.animateViewEntrance(findViewById(R.id.achievementsSection), delay = 500L)
+        
+        // Animate bottom navigation
+        SmartAnimations.animateViewEntrance(findViewById(R.id.bottomNavigation), delay = 600L)
+        
+        // Animate profile picture with bounce
+        ivProfile.postDelayed({
+            SmartAnimations.animateBounce(ivProfile)
+        }, 800L)
+    }
 
     private fun initializeCalendar() {
         // Get the last 7 days including today
@@ -303,7 +395,7 @@ class MainActivity : AppCompatActivity() {
         calendarDays.addAll(CalendarManager.getLast7Days())
         
         // ALWAYS select today's date by default
-        selectedDate = CalendarManager.getCurrentDate()
+        selectedDate = CalendarManager.formatDateForStorage(CalendarManager.getCurrentDate())
         
         // Find calendar layout and get all day views
         val calendarLayout = findViewById<LinearLayout>(R.id.calendarLayout)
@@ -353,27 +445,27 @@ class MainActivity : AppCompatActivity() {
         dayNameView.text = CalendarManager.getDayName(date)
         
         when {
-            date == selectedDate -> {
+            CalendarManager.formatDateForStorage(date) == selectedDate -> {
                 // Selected date - highlight with blue background
                 dayView.setBackgroundResource(R.drawable.selected_day_background)
-                dayNameView.setTextColor(getColor(android.R.color.white))
-                dayNumberView.setTextColor(getColor(android.R.color.white))
+                dayNameView.setTextColor(ContextCompat.getColor(this, android.R.color.white))
+                dayNumberView.setTextColor(ContextCompat.getColor(this, android.R.color.white))
                 dayNumberView.setTypeface(null, android.graphics.Typeface.BOLD)
                 dayView.isClickable = true
             }
             CalendarManager.isFutureDate(date) -> {
                 // Future date - disabled
                 dayView.background = null
-                dayNameView.setTextColor(getColor(R.color.disabled_text))
-                dayNumberView.setTextColor(getColor(R.color.disabled_text))
+                dayNameView.setTextColor(ContextCompat.getColor(this, R.color.disabled_text))
+                dayNumberView.setTextColor(ContextCompat.getColor(this, R.color.disabled_text))
                 dayNumberView.setTypeface(null, android.graphics.Typeface.NORMAL)
                 dayView.isClickable = false
             }
             else -> {
                 // Past date or today (not selected) - available
                 dayView.background = null
-                dayNameView.setTextColor(getColor(R.color.calendar_text))
-                dayNumberView.setTextColor(getColor(R.color.calendar_text))
+                dayNameView.setTextColor(ContextCompat.getColor(this, R.color.calendar_text))
+                dayNumberView.setTextColor(ContextCompat.getColor(this, R.color.calendar_text))
                 dayNumberView.setTypeface(null, android.graphics.Typeface.NORMAL)
                 dayView.isClickable = true
             }
@@ -396,74 +488,41 @@ class MainActivity : AppCompatActivity() {
     }
     
     private fun selectDate(date: Date) {
-        selectedDate = date
+        selectedDate = CalendarManager.formatDateForStorage(date)
         updateCalendarDisplay()
         showSelectedDateInfo()
         loadDataForSelectedDate()
     }
     
     private fun showSelectedDateInfo() {
-        val dateDescription = CalendarManager.getDateDescription(selectedDate)
-        val dateString = CalendarManager.formatDateForStorage(selectedDate)
+        // Find the matching date from calendarDays
+        val selectedDateObj = calendarDays.find { 
+            CalendarManager.formatDateForStorage(it) == selectedDate 
+        } ?: Date()
+        val dateDescription = CalendarManager.getDateDescription(selectedDateObj)
         
         // You can add a Toast or update a TextView to show selected date
         // For now, we'll use a subtle toast for user feedback
-        if (!CalendarManager.isToday(selectedDate)) {
+        if (!CalendarManager.isToday(selectedDateObj)) {
             ModernNotification.showInfo(this, "Viewing data for $dateDescription")
         }
     }
     
     private fun loadDataForSelectedDate() {
-        val dateString = CalendarManager.formatDateForStorage(selectedDate)
+        val dateString = selectedDate
         
-        // Load calorie tracker data for the selected date
-        calorieTracker.getDailyNutritionForDate(dateString,
-            onSuccess = { nutrition ->
-                // Load or create daily data and update with real calorie information
-                FirebaseHelper.getOrCreateDailyData(dateString) { dailyData, error ->
-                    if (dailyData != null) {
-                        // Update daily data with real calorie tracker data
-                        val updatedDailyData = dailyData.copy(
-                            caloriesConsumed = nutrition.totalCalories,
-                            caloriesGoal = nutrition.goalCalories
-                        )
-                        
-                        // Save updated data back to Firebase
-                        FirebaseHelper.saveDailyData(updatedDailyData) { success, saveError ->
-                            // Update UI regardless of save success
-                            currentDailyData = updatedDailyData
-                            updateUIWithDailyData(updatedDailyData)
-                        }
-                    } else {
-                        // Create new daily data with calorie information
-                        val userId = FirebaseHelper.getCurrentUserId() ?: ""
-                        val newDailyData = DailyData.createDefault(dateString, userId).copy(
-                            caloriesConsumed = nutrition.totalCalories,
-                            caloriesGoal = nutrition.goalCalories
-                        )
-                        
-                        FirebaseHelper.saveDailyData(newDailyData) { success, saveError ->
-                            currentDailyData = newDailyData
-                            updateUIWithDailyData(newDailyData)
-                        }
-                    }
-                }
-            },
-            onError = { calorieError ->
-                // Fallback to daily data without calorie tracker integration
-                FirebaseHelper.getOrCreateDailyData(dateString) { dailyData, error ->
-                    if (dailyData != null) {
-                        currentDailyData = dailyData
-                        updateUIWithDailyData(dailyData)
-                    } else {
-                        showDefaultData()
-                    }
-                }
+        // Load daily data for the selected date
+        FirebaseHelper.getOrCreateDailyData(dateString) { dailyData, error ->
+            if (error == null && dailyData != null) {
+                currentDailyData = dailyData
+                updateUI(dailyData)
+            } else {
+                showDefaultData()
             }
-        )
+        }
     }
     
-    private fun updateUIWithDailyData(dailyData: DailyData) {
+    private fun updateUI(dailyData: DailyData) {
         // Update calorie display with progress
         updateCalorieDisplay(dailyData.caloriesConsumed, dailyData.caloriesGoal)
         
@@ -494,48 +553,180 @@ class MainActivity : AppCompatActivity() {
         
         // Check for achievements and show notifications
         checkForAchievements(dailyData)
+        
+        // Update achievements with simple static content
+        updateSimpleAchievements(dailyData)
     }
     
     private fun checkForAchievements(dailyData: DailyData) {
+        val selectedDateObj = calendarDays.find { 
+            CalendarManager.formatDateForStorage(it) == selectedDate 
+        } ?: Date()
+        
         // Check for calorie goal achievement
         if (dailyData.caloriesConsumed >= dailyData.caloriesGoal && dailyData.caloriesConsumed > 0) {
-            if (CalendarManager.isToday(selectedDate)) {
+            if (CalendarManager.isToday(selectedDateObj)) {
                 ModernNotification.showSuccess(this, "🎉 Daily calorie goal achieved!")
             }
         }
         
-        // Check for workout completion
-        if (dailyData.workoutsCompleted > 0 && CalendarManager.isToday(selectedDate)) {
+        // Check for workout achievement
+        if (dailyData.workoutsCompleted > 0 && CalendarManager.isToday(selectedDateObj)) {
             ModernNotification.showSuccess(this, "💪 Great job completing your workout!")
         }
         
         // Check for running achievement
-        if (dailyData.hasRunToday && dailyData.runningDistance > 0 && CalendarManager.isToday(selectedDate)) {
+        if (dailyData.hasRunToday && dailyData.runningDistance > 0 && CalendarManager.isToday(selectedDateObj)) {
             ModernNotification.showSuccess(this, "🏃‍♂️ Running session completed!")
         }
+    }
+    
+    private fun updateSimpleAchievements(dailyData: DailyData) {
+        // Update achievement card 1 - Workout Streak
+        val workoutStreak = dailyData.workoutsCompleted
+        achievementTitle1.text = "Workout Streak"
+        achievementProgress1.text = "$workoutStreak/7"
+        achievementIcon1.setColorFilter(if (workoutStreak >= 7) 
+            ContextCompat.getColor(this, R.color.bmi_good_green) else 
+            ContextCompat.getColor(this, R.color.blue_primary))
+        
+        // Update achievement card 2 - Calorie Goal
+        val calorieProgress = if (dailyData.caloriesGoal > 0) {
+            ((dailyData.caloriesConsumed / dailyData.caloriesGoal) * 7).toInt().coerceIn(0, 7)
+        } else 0
+        achievementTitle2.text = "Calorie Master"
+        achievementProgress2.text = "$calorieProgress/7"
+        achievementIcon2.setColorFilter(if (calorieProgress >= 7) 
+            ContextCompat.getColor(this, R.color.bmi_good_green) else 
+            ContextCompat.getColor(this, R.color.bmi_warning_orange))
+        
+        // Update achievement card 3 - Total Workouts
+        val totalWorkouts = dailyData.workoutsCompleted
+        achievementTitle3.text = "Fitness Pro"
+        achievementProgress3.text = "$totalWorkouts/10"
+        achievementIcon3.setColorFilter(if (totalWorkouts >= 10) 
+            ContextCompat.getColor(this, R.color.bmi_good_green) else 
+            ContextCompat.getColor(this, R.color.purple))
+        
+        // Add click listeners for achievement details
+        setupAchievementClickListeners()
+    }
+    
+    private fun setupAchievementClickListeners() {
+        achievementCard1.setOnClickListener {
+            SmartAnimations.animateCardPress(achievementCard1) {
+                showAchievementModal(
+                    title = "Workout Streak",
+                    description = "Complete workouts for 7 consecutive days to unlock new workout plans and advanced training routines.",
+                    reward = "Unlock new workout plans",
+                    currentValue = currentDailyData?.workoutsCompleted ?: 3,
+                    targetValue = 7,
+                    iconResource = R.drawable.ic_medal,
+                    iconColor = ContextCompat.getColor(this, R.color.blue_primary),
+                    progressColor = R.color.blue_primary
+                )
+            }
+        }
+        
+        achievementCard2.setOnClickListener {
+            SmartAnimations.animateCardPress(achievementCard2) {
+                val calorieProgress = if (currentDailyData?.caloriesGoal ?: 0.0 > 0) {
+                    ((currentDailyData?.caloriesConsumed ?: 0.0) / (currentDailyData?.caloriesGoal ?: 2200.0) * 7).toInt().coerceIn(0, 7)
+                } else 5
+                
+                showAchievementModal(
+                    title = "Calorie Master",
+                    description = "Meet your daily calorie goal for 7 consecutive days to unlock personalized meal recommendations and nutrition insights.",
+                    reward = "Unlock meal recommendations",
+                    currentValue = calorieProgress,
+                    targetValue = 7,
+                    iconResource = R.drawable.ic_fire,
+                    iconColor = ContextCompat.getColor(this, R.color.bmi_warning_orange),
+                    progressColor = R.color.bmi_warning_orange
+                )
+            }
+        }
+        
+        achievementCard3.setOnClickListener {
+            SmartAnimations.animateCardPress(achievementCard3) {
+                showAchievementModal(
+                    title = "Fitness Pro",
+                    description = "Complete 10 total workouts to unlock advanced exercises, specialized training programs, and expert fitness tips.",
+                    reward = "Unlock advanced exercises",
+                    currentValue = currentDailyData?.workoutsCompleted ?: 3,
+                    targetValue = 10,
+                    iconResource = R.drawable.ic_trophy,
+                    iconColor = ContextCompat.getColor(this, R.color.purple),
+                    progressColor = R.color.purple
+                )
+            }
+        }
+    }
+    
+    private fun showAchievementModal(
+        title: String,
+        description: String,
+        reward: String,
+        currentValue: Int,
+        targetValue: Int,
+        iconResource: Int,
+        iconColor: Int,
+        progressColor: Int
+    ) {
+        val achievementData = AchievementModal.AchievementData(
+            title = title,
+            description = description,
+            reward = reward,
+            currentValue = currentValue,
+            targetValue = targetValue,
+            iconResource = iconResource,
+            iconColor = iconColor,
+            progressColor = progressColor
+        )
+        
+        achievementModal.show(achievementData)
     }
     
     private fun showDefaultData() {
         // Show default values when no data is available
         updateCalorieDisplay(0.0, 2200.0)
         loadLatestBMIRecord()
+        
+        // Initialize achievements with default data
+        val defaultDailyData = DailyData(
+            date = selectedDate,
+            caloriesConsumed = 1850.0,
+            caloriesGoal = 2200.0,
+            workoutsCompleted = 3,
+            hasRunToday = false,
+            runningDistance = 0.0,
+            bmiValue = 22.4,
+            bmiCategory = "Normal Weight"
+        )
+        updateSimpleAchievements(defaultDailyData)
     }
-
 
     private fun updateCalorieDisplay(consumedCalories: Double, goalCalories: Double) {
         val remainingCalories = goalCalories - consumedCalories
         val progressPercentage = ((consumedCalories / goalCalories) * 100).toInt().coerceIn(0, 100)
         
-        // Update calorie numbers
-        tvCaloriesConsumed.text = String.format("%.0f", consumedCalories)
-        tvCaloriesGoal.text = "/ ${goalCalories.toInt()}"
-        progressDaily.progress = progressPercentage
+        // Animate calorie number changes
+        SmartAnimations.animateTextChange(tvCaloriesConsumed, String.format("%.0f", consumedCalories))
+        SmartAnimations.animateTextChange(tvCaloriesGoal, "/ ${goalCalories.toInt()}")
+        
+        // Animate progress bar
+        SmartAnimations.animateProgressBar(progressDaily, progressPercentage)
         
         // Keep the progress bar blue to match original design
-        tvCaloriesConsumed.setTextColor(getColor(android.R.color.white))
-        progressDaily.progressTintList = getColorStateList(R.color.blue_primary)
-        
-        // Keep the display simple to match original design
-        tvCaloriesGoal.text = "/ ${goalCalories.toInt()}"
+        tvCaloriesConsumed.setTextColor(ContextCompat.getColor(this, android.R.color.white))
+        progressDaily.progressTintList = ContextCompat.getColorStateList(this, R.color.blue_primary)
+    }
+    
+    override fun onBackPressed() {
+        if (::achievementModal.isInitialized && achievementModal.isShowing()) {
+            achievementModal.dismiss()
+        } else {
+            super.onBackPressed()
+        }
     }
 }
