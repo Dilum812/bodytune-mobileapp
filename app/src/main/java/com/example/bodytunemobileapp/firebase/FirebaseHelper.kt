@@ -302,5 +302,64 @@ class FirebaseHelper {
                 }
             }
         }
+        
+        fun updateUserProfile(
+            gender: String,
+            height: Double,
+            weight: Double,
+            age: Int,
+            onSuccess: () -> Unit,
+            onError: (String) -> Unit
+        ) {
+            val userId = getCurrentUserId()
+            if (userId != null) {
+                // First get current user data to ensure we don't overwrite existing fields
+                usersRef.child(userId).addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        val currentUser = snapshot.getValue(User::class.java)
+                        
+                        val updates = mutableMapOf<String, Any>(
+                            "gender" to gender,
+                            "height" to height,
+                            "weight" to weight,
+                            "age" to age,
+                            "updatedAt" to System.currentTimeMillis()
+                        )
+                        
+                        // Ensure required fields are present
+                        if (currentUser != null) {
+                            updates["uid"] = currentUser.uid
+                            updates["email"] = currentUser.email
+                        } else {
+                            // If no existing user data, add required fields
+                            updates["uid"] = userId
+                            updates["email"] = auth.currentUser?.email ?: ""
+                            updates["createdAt"] = System.currentTimeMillis()
+                        }
+                        
+                        android.util.Log.d("FirebaseHelper", "Updating user profile for userId: $userId")
+                        android.util.Log.d("FirebaseHelper", "Updates: $updates")
+                        
+                        usersRef.child(userId).updateChildren(updates)
+                            .addOnSuccessListener {
+                                android.util.Log.d("FirebaseHelper", "Profile update successful")
+                                onSuccess()
+                            }
+                            .addOnFailureListener { exception ->
+                                android.util.Log.e("FirebaseHelper", "Profile update failed: ${exception.message}")
+                                onError(exception.message ?: "Failed to update profile")
+                            }
+                    }
+                    
+                    override fun onCancelled(error: DatabaseError) {
+                        android.util.Log.e("FirebaseHelper", "Failed to read current user data: ${error.message}")
+                        onError("Failed to read current user data: ${error.message}")
+                    }
+                })
+            } else {
+                android.util.Log.e("FirebaseHelper", "User not authenticated")
+                onError("User not authenticated")
+            }
+        }
     }
 }

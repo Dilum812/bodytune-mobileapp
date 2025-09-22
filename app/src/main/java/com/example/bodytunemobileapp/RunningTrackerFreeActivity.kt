@@ -21,6 +21,7 @@ import com.example.bodytunemobileapp.models.RoutePoint
 import com.example.bodytunemobileapp.models.RunningSession
 import com.example.bodytunemobileapp.utils.LocationTracker
 import com.example.bodytunemobileapp.utils.ProfilePictureLoader
+import com.example.bodytunemobileapp.utils.ModernNotification
 
 class RunningTrackerFreeActivity : AppCompatActivity(), LocationTracker.LocationUpdateListener {
 
@@ -83,7 +84,7 @@ class RunningTrackerFreeActivity : AppCompatActivity(), LocationTracker.Location
             checkLocationPermissions()
         } catch (e: Exception) {
             e.printStackTrace()
-            Toast.makeText(this, "Error initializing running tracker: ${e.message}", Toast.LENGTH_LONG).show()
+            ModernNotification.showError(this, "Error initializing running tracker: ${e.message}")
             finish()
         }
     }
@@ -197,7 +198,7 @@ class RunningTrackerFreeActivity : AppCompatActivity(), LocationTracker.Location
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 getCurrentLocation()
             } else {
-                Toast.makeText(this, "Location permission required for tracking", Toast.LENGTH_LONG).show()
+                ModernNotification.showError(this, "Location permission required for tracking")
             }
         }
     }
@@ -206,14 +207,14 @@ class RunningTrackerFreeActivity : AppCompatActivity(), LocationTracker.Location
         try {
             locationTracker.getCurrentLocation { location ->
                 location?.let {
-                    Toast.makeText(this, "GPS Ready - Location found!", Toast.LENGTH_SHORT).show()
+                    ModernNotification.showSuccess(this, "GPS Ready - Location found!")
                 } ?: run {
-                    Toast.makeText(this, "Unable to get current location. GPS tracking may be limited.", Toast.LENGTH_SHORT).show()
+                    ModernNotification.showInfo(this, "Unable to get current location. GPS tracking may be limited.")
                 }
             }
         } catch (e: Exception) {
             e.printStackTrace()
-            Toast.makeText(this, "Error getting location: ${e.message}", Toast.LENGTH_SHORT).show()
+            ModernNotification.showError(this, "Error getting location: ${e.message}")
         }
     }
 
@@ -242,7 +243,7 @@ class RunningTrackerFreeActivity : AppCompatActivity(), LocationTracker.Location
         // Start stats updates
         updateHandler.post(updateRunnable)
         
-        Toast.makeText(this, "Running started!", Toast.LENGTH_SHORT).show()
+        ModernNotification.showSuccess(this, "Running started!")
     }
 
     private fun pauseRunning() {
@@ -254,7 +255,7 @@ class RunningTrackerFreeActivity : AppCompatActivity(), LocationTracker.Location
         // Stop location tracking
         locationTracker.stopTracking()
         
-        Toast.makeText(this, "Running paused", Toast.LENGTH_SHORT).show()
+        ModernNotification.showInfo(this, "Running paused")
     }
 
     private fun resumeRunning() {
@@ -272,7 +273,7 @@ class RunningTrackerFreeActivity : AppCompatActivity(), LocationTracker.Location
         // Resume stats updates
         updateHandler.post(updateRunnable)
         
-        Toast.makeText(this, "Running resumed", Toast.LENGTH_SHORT).show()
+        ModernNotification.showSuccess(this, "Running resumed")
     }
 
     private fun stopRunning() {
@@ -290,7 +291,7 @@ class RunningTrackerFreeActivity : AppCompatActivity(), LocationTracker.Location
         // Save session data
         saveRunningSession()
         
-        Toast.makeText(this, "Running stopped! Session saved.", Toast.LENGTH_SHORT).show()
+        ModernNotification.showSuccess(this, "Running stopped! Session saved.")
         
         // Reset for new session
         resetSession()
@@ -298,7 +299,7 @@ class RunningTrackerFreeActivity : AppCompatActivity(), LocationTracker.Location
 
     private fun recordLap() {
         if (isRunning && !isPaused) {
-            Toast.makeText(this, "Lap recorded: ${String.format("%.2f", totalDistance)} km", Toast.LENGTH_SHORT).show()
+            ModernNotification.showInfo(this, "Lap recorded: ${String.format("%.2f", totalDistance)} km")
         }
     }
 
@@ -321,12 +322,12 @@ class RunningTrackerFreeActivity : AppCompatActivity(), LocationTracker.Location
             }
         } catch (e: Exception) {
             e.printStackTrace()
-            Toast.makeText(this, "Error updating location: ${e.message}", Toast.LENGTH_SHORT).show()
+            ModernNotification.showError(this, "Error updating location: ${e.message}")
         }
     }
 
     override fun onLocationError(error: String) {
-        Toast.makeText(this, "Location error: $error", Toast.LENGTH_SHORT).show()
+        ModernNotification.showError(this, "Location error: $error")
     }
 
 
@@ -368,7 +369,9 @@ class RunningTrackerFreeActivity : AppCompatActivity(), LocationTracker.Location
             endTime = System.currentTimeMillis(),
             duration = System.currentTimeMillis() - startTime,
             distance = totalDistance,
-            averagePace = LocationTracker.calculatePace(totalDistance, System.currentTimeMillis() - startTime),
+            averagePace = if (totalDistance > 0) {
+                ((System.currentTimeMillis() - startTime) / 1000.0 / 60.0) / totalDistance
+            } else 0.0,
             calories = LocationTracker.calculateCalories(totalDistance),
             route = routePoints
         )

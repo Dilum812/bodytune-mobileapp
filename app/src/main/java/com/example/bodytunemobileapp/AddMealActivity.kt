@@ -13,13 +13,17 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import com.example.bodytunemobileapp.models.Food
+import com.example.bodytunemobileapp.models.MealEntry
 import com.example.bodytunemobileapp.models.MealType
 import com.example.bodytunemobileapp.utils.CalorieTracker
 import com.example.bodytunemobileapp.utils.FoodDatabase
 import com.example.bodytunemobileapp.utils.ProfilePictureLoader
 import com.example.bodytunemobileapp.utils.FirebaseDebugHelper
+import com.example.bodytunemobileapp.utils.ModernNotification
+import com.example.bodytunemobileapp.utils.CalendarManager
 import com.google.firebase.auth.FirebaseAuth
 import android.util.Log
+import java.util.Date
 
 class AddMealActivity : AppCompatActivity() {
 
@@ -30,6 +34,7 @@ class AddMealActivity : AppCompatActivity() {
     private lateinit var mealTypeContainer: androidx.constraintlayout.widget.ConstraintLayout
     private lateinit var btnDone: Button
     
+    private lateinit var ivFoodImage: ImageView
     private lateinit var tvFoodName: TextView
     private lateinit var tvCalories: TextView
     private lateinit var tvProteinValue: TextView
@@ -52,6 +57,7 @@ class AddMealActivity : AppCompatActivity() {
     private var selectedFood: Food? = null
     private var selectedMealType: MealType = MealType.BREAKFAST
     private var quantity: Double = 100.0
+    private var selectedDate: Date = CalendarManager.getCurrentDate()
     private lateinit var calorieTracker: CalorieTracker
     private lateinit var auth: FirebaseAuth
 
@@ -77,6 +83,14 @@ class AddMealActivity : AppCompatActivity() {
             updateMealTypeSelection()
         }
         
+        // Check if selected date was passed from previous screen
+        val selectedDateExtra = intent.getStringExtra("selected_date")
+        if (selectedDateExtra != null) {
+            CalendarManager.parseDateFromStorage(selectedDateExtra)?.let {
+                selectedDate = it
+            }
+        }
+        
         setupSearch()
     }
 
@@ -88,6 +102,7 @@ class AddMealActivity : AppCompatActivity() {
         mealTypeContainer = findViewById(R.id.mealTypeContainer)
         btnDone = findViewById(R.id.btnDone)
         
+        ivFoodImage = findViewById(R.id.ivFoodImage)
         tvFoodName = findViewById(R.id.tvFoodName)
         tvCalories = findViewById(R.id.tvCalories)
         tvProteinValue = findViewById(R.id.tvProteinValue)
@@ -220,6 +235,14 @@ class AddMealActivity : AppCompatActivity() {
         selectedFood = food
         
         tvFoodName.text = food.name
+        
+        // Set food image
+        if (food.imageResource != 0) {
+            ivFoodImage.setImageResource(food.imageResource)
+        } else {
+            ivFoodImage.setImageResource(R.drawable.ic_food_generic)
+        }
+        
         updateNutritionValues()
         
         foodDetailsCard.visibility = View.VISIBLE
@@ -283,7 +306,7 @@ class AddMealActivity : AppCompatActivity() {
         val currentUser = auth.currentUser
         if (currentUser == null) {
             Log.e("AddMeal", "User not authenticated")
-            Toast.makeText(this, "Please sign in to add meals", Toast.LENGTH_LONG).show()
+            ModernNotification.showError(this, "Please sign in to add meals")
             // Redirect to sign in
             val intent = Intent(this, SignInActivity::class.java)
             startActivity(intent)
@@ -299,13 +322,13 @@ class AddMealActivity : AppCompatActivity() {
     private fun addMealToTracker() {
         val food = selectedFood
         if (food == null) {
-            Toast.makeText(this, "Please select a food item first", Toast.LENGTH_SHORT).show()
+            ModernNotification.showError(this, "Please select a food item first")
             return
         }
         
         // Check authentication again before saving
         if (auth.currentUser == null) {
-            Toast.makeText(this, "Authentication expired. Please sign in again.", Toast.LENGTH_LONG).show()
+            ModernNotification.showError(this, "Authentication expired. Please sign in again.")
             checkAuthentication()
             return
         }
@@ -314,41 +337,118 @@ class AddMealActivity : AppCompatActivity() {
         btnDone.isEnabled = false
         btnDone.text = "Adding..."
         
-        calorieTracker.addMealEntry(
-            food = food,
+        // Create a custom meal entry with the selected date
+        val dateString = CalendarManager.formatDateForStorage(selectedDate)
+        
+        // Calculate nutrition values based on quantity
+        val multiplier = quantity / 100.0
+        val calories = food.caloriesPer100g * multiplier
+        val protein = food.proteinPer100g * multiplier
+        val carbs = food.carbsPer100g * multiplier
+        val fat = food.fatPer100g * multiplier
+        
+        val mealEntry = MealEntry(
+            id = "", // Will be set by Firebase
+            userId = auth.currentUser?.uid ?: "",
+            foodId = food.id,
+            foodName = food.name,
             quantity = quantity,
             mealType = selectedMealType,
-            onSuccess = {
+            date = dateString,
+            timestamp = System.currentTimeMillis(),
+            calories = calories,
+            protein = protein,
+            carbs = carbs,
+            fat = fat
+        )
+        
+        // Save to Firebase with custom date
+        saveMealEntryWithDate(mealEntry)
+    }
+
+    private fun saveMealEntryWithDate(mealEntry: MealEntry) {
+        val userId = auth.currentUser?.uid
+        if (userId == null) {
+            runOnUiThread {
+                btnDone.isEnabled = true
+                btnDone.text = "Done"
+                ModernNotification.showError(this, "Please sign in to add meals")
+            }
+            return
+        }
+        
+        val database = com.google.firebase.database.FirebaseDatabase.getInstance()
+        val mealId = database.reference.push().key
+        
+        if (mealId == null) {
+            runOnUiThread {
+                btnDone.isEnabled = true
+                btnDone.text = "Done"
+                ModernNotification.showError(this, "Failed to generate meal ID")
+            }
+            return
+        }
+        
+        val food = selectedFood!!
+        val dateString = CalendarManager.formatDateForStorage(selectedDate)
+        
+        // Calculate nutrition values based on quantity
+        val multiplier = quantity / 100.0
+        val calories = food.caloriesPer100g * multiplier
+        val protein = food.proteinPer100g * multiplier
+        val carbs = food.carbsPer100g * multiplier
+        val fat = food.fatPer100g * multiplier
+        
+        // Convert to map to ensure proper serialization
+        val mealMap = mapOf(
+            "id" to mealId,
+            "userId" to userId,
+            "foodId" to food.id,
+            "foodName" to food.name,
+            "quantity" to quantity,
+            "mealType" to selectedMealType.name,
+            "date" to dateString,
+            "timestamp" to System.currentTimeMillis(),
+            "calories" to calories,
+            "protein" to protein,
+            "carbs" to carbs,
+            "fat" to fat
+        )
+        
+        database.reference
+            .child("meal_entries")
+            .child(userId)
+            .child(dateString)
+            .child(mealId)
+            .setValue(mealMap)
+            .addOnSuccessListener {
                 runOnUiThread {
-                    Toast.makeText(this, "Meal added successfully!", Toast.LENGTH_SHORT).show()
+                    val dateDescription = if (CalendarManager.isToday(selectedDate)) {
+                        "today"
+                    } else {
+                        CalendarManager.getDateDescription(selectedDate).lowercase()
+                    }
+                    ModernNotification.showSuccess(this, "Meal added for $dateDescription!")
                     finish()
                 }
-            },
-            onError = { error ->
+            }
+            .addOnFailureListener { exception ->
                 runOnUiThread {
                     btnDone.isEnabled = true
                     btnDone.text = "Done"
                     
-                    // Show more user-friendly error messages
                     val userFriendlyMessage = when {
-                        error.contains("sign in", true) -> "Please sign in to add meals"
-                        error.contains("permission", true) -> "Database access denied. Please contact support."
-                        error.contains("network", true) -> "No internet connection. Please try again."
-                        error.contains("auth", true) -> "Session expired. Please sign in again."
-                        else -> "Failed to add meal. Please try again."
+                        exception.message?.contains("permission", true) == true -> "Database permission denied. Please check your account."
+                        exception.message?.contains("network", true) == true -> "Network error. Please check your internet connection."
+                        exception.message?.contains("auth", true) == true -> "Authentication error. Please sign in again."
+                        else -> "Failed to save meal: ${exception.message}"
                     }
                     
-                    Toast.makeText(this, userFriendlyMessage, Toast.LENGTH_LONG).show()
-                    
-                    // If authentication error, redirect to sign in
-                    if (error.contains("sign in", true) || error.contains("auth", true)) {
-                        checkAuthentication()
-                    }
+                    ModernNotification.showError(this, userFriendlyMessage)
                 }
             }
-        )
     }
-
+    
     private fun loadProfilePicture() {
         ProfilePictureLoader.loadProfilePicture(this, ivProfile)
     }

@@ -46,6 +46,12 @@
             android:screenOrientation="portrait" />
         
         <activity
+            android:name=".ProfileSetupActivity"
+            android:exported="false"
+            android:theme="@style/AuthTheme"
+            android:screenOrientation="portrait" />
+        
+        <activity
             android:name=".MainActivity"
             android:exported="false"
             android:theme="@style/AppTheme"
@@ -104,6 +110,17 @@
             android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
+        
+        <activity
+            android:name=".QuickRunActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
+        
+        <!-- Google Maps API Key -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="YOUR_GOOGLE_MAPS_API_KEY_HERE" />
         
     </application>
 

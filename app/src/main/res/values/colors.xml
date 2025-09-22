@@ -27,4 +27,9 @@
     <!-- Calendar colors -->
     <color name="calendar_text">#888888</color>
     <color name="disabled_text">#555555</color>
+    
+    <!-- Modern Notification colors -->
+    <color name="notification_success">#4CAF50</color>
+    <color name="notification_error">#F44336</color>
+    <color name="notification_info">#2196F3</color>
 </resources>

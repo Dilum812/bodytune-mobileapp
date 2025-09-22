@@ -45,15 +45,302 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <!-- Date Selector -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/dateSelector"
+        android:layout_width="0dp"
+        android:layout_height="80dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvTitle">
+
+        <!-- Day 1 -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/day1Container"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:focusable="true"
+            app:layout_constraintEnd_toStartOf="@id/day2Container"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.143">
+
+            <TextView
+                android:id="@+id/tvDay1Name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sun"
+                android:textColor="@color/gray_light"
+                android:textSize="12sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tvDay1Number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="01"
+                android:textColor="@color/gray_light"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvDay1Name" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!-- Day 2 -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/day2Container"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:focusable="true"
+            app:layout_constraintEnd_toStartOf="@id/day3Container"
+            app:layout_constraintStart_toEndOf="@id/day1Container"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.143">
+
+            <TextView
+                android:id="@+id/tvDay2Name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Mon"
+                android:textColor="@color/gray_light"
+                android:textSize="12sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tvDay2Number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="02"
+                android:textColor="@color/gray_light"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvDay2Name" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!-- Day 3 -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/day3Container"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:focusable="true"
+            app:layout_constraintEnd_toStartOf="@id/day4Container"
+            app:layout_constraintStart_toEndOf="@id/day2Container"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.143">
+
+            <TextView
+                android:id="@+id/tvDay3Name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tue"
+                android:textColor="@color/gray_light"
+                android:textSize="12sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tvDay3Number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="03"
+                android:textColor="@color/gray_light"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvDay3Name" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!-- Day 4 -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/day4Container"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:focusable="true"
+            app:layout_constraintEnd_toStartOf="@id/day5Container"
+            app:layout_constraintStart_toEndOf="@id/day3Container"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.143">
+
+            <TextView
+                android:id="@+id/tvDay4Name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Wed"
+                android:textColor="@color/gray_light"
+                android:textSize="12sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tvDay4Number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="04"
+                android:textColor="@color/gray_light"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvDay4Name" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!-- Day 5 -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/day5Container"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:focusable="true"
+            app:layout_constraintEnd_toStartOf="@id/day6Container"
+            app:layout_constraintStart_toEndOf="@id/day4Container"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.143">
+
+            <TextView
+                android:id="@+id/tvDay5Name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Thu"
+                android:textColor="@color/gray_light"
+                android:textSize="12sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tvDay5Number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="05"
+                android:textColor="@color/gray_light"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvDay5Name" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!-- Day 6 -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/day6Container"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:focusable="true"
+            app:layout_constraintEnd_toStartOf="@id/day7Container"
+            app:layout_constraintStart_toEndOf="@id/day5Container"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.143">
+
+            <TextView
+                android:id="@+id/tvDay6Name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Fri"
+                android:textColor="@color/gray_light"
+                android:textSize="12sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tvDay6Number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="06"
+                android:textColor="@color/gray_light"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvDay6Name" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!-- Day 7 (Today) -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/day7Container"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/selected_day_background"
+            android:clickable="true"
+            android:focusable="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/day6Container"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.143">
+
+            <TextView
+                android:id="@+id/tvDay7Name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sat"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tvDay7Number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="07"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvDay7Name" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
     <!-- Circular Progress -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/progressContainer"
         android:layout_width="280dp"
         android:layout_height="280dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="15dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvTitle">
+        app:layout_constraintTop_toBottomOf="@id/dateSelector">
 
         <ProgressBar
             android:id="@+id/circularProgress"
@@ -66,8 +353,10 @@
             android:progressDrawable="@drawable/circular_progress_drawable"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
 
         <TextView
             android:id="@+id/tvCaloriesConsumed"
@@ -98,14 +387,19 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <!-- Meal Cards Grid -->
+
+    <!-- Add Meal Button -->
+
+    <!-- Bottom Navigation -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/mealsContainer"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="3dp"
         android:layout_marginEnd="20dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/progressContainer">
 
@@ -385,26 +679,24 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <!-- Add Meal Button -->
     <Button
         android:id="@+id/btnAddMeal"
         android:layout_width="0dp"
         android:layout_height="56dp"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="20dp"
         android:background="@drawable/button_primary"
-        android:drawableStart="@drawable/ic_add"
         android:drawablePadding="8dp"
         android:text="Add Meal"
         android:textColor="@color/white"
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/mealsContainer" />
 
-    <!-- Bottom Navigation -->
     <include
         android:id="@+id/bottomNavigation"
         layout="@layout/bottom_navigation"

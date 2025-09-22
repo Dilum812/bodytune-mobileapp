@@ -14,6 +14,9 @@ import com.example.bodytunemobileapp.models.MealEntry
 import com.example.bodytunemobileapp.models.MealType
 import com.example.bodytunemobileapp.utils.CalorieTracker
 import com.example.bodytunemobileapp.utils.ProfilePictureLoader
+import com.example.bodytunemobileapp.utils.CalendarManager
+import android.widget.Toast
+import java.util.Date
 
 class CalorieTrackerActivity : AppCompatActivity() {
 
@@ -40,9 +43,35 @@ class CalorieTrackerActivity : AppCompatActivity() {
     
     private lateinit var btnAddMeal: Button
     
+    // Date selector views
+    private lateinit var day1Container: androidx.constraintlayout.widget.ConstraintLayout
+    private lateinit var day2Container: androidx.constraintlayout.widget.ConstraintLayout
+    private lateinit var day3Container: androidx.constraintlayout.widget.ConstraintLayout
+    private lateinit var day4Container: androidx.constraintlayout.widget.ConstraintLayout
+    private lateinit var day5Container: androidx.constraintlayout.widget.ConstraintLayout
+    private lateinit var day6Container: androidx.constraintlayout.widget.ConstraintLayout
+    private lateinit var day7Container: androidx.constraintlayout.widget.ConstraintLayout
+    
+    private lateinit var tvDay1Name: TextView
+    private lateinit var tvDay1Number: TextView
+    private lateinit var tvDay2Name: TextView
+    private lateinit var tvDay2Number: TextView
+    private lateinit var tvDay3Name: TextView
+    private lateinit var tvDay3Number: TextView
+    private lateinit var tvDay4Name: TextView
+    private lateinit var tvDay4Number: TextView
+    private lateinit var tvDay5Name: TextView
+    private lateinit var tvDay5Number: TextView
+    private lateinit var tvDay6Name: TextView
+    private lateinit var tvDay6Number: TextView
+    private lateinit var tvDay7Name: TextView
+    private lateinit var tvDay7Number: TextView
+    
     private lateinit var calorieTracker: CalorieTracker
     private var dailyNutrition: DailyNutrition? = null
     private var goalCalories = 2200.0
+    private var selectedDate: Date = CalendarManager.getCurrentDate()
+    private var weekDates: List<Date> = emptyList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,6 +81,7 @@ class CalorieTrackerActivity : AppCompatActivity() {
 
             initializeViews()
             setupFullScreen()
+            setupDateSelector()
             setupClickListeners()
             loadProfilePicture()
             
@@ -87,6 +117,30 @@ class CalorieTrackerActivity : AppCompatActivity() {
             progressSnacks = findViewById(R.id.progressSnacks)
             
             btnAddMeal = findViewById(R.id.btnAddMeal)
+            
+            // Initialize date selector views
+            day1Container = findViewById(R.id.day1Container)
+            day2Container = findViewById(R.id.day2Container)
+            day3Container = findViewById(R.id.day3Container)
+            day4Container = findViewById(R.id.day4Container)
+            day5Container = findViewById(R.id.day5Container)
+            day6Container = findViewById(R.id.day6Container)
+            day7Container = findViewById(R.id.day7Container)
+            
+            tvDay1Name = findViewById(R.id.tvDay1Name)
+            tvDay1Number = findViewById(R.id.tvDay1Number)
+            tvDay2Name = findViewById(R.id.tvDay2Name)
+            tvDay2Number = findViewById(R.id.tvDay2Number)
+            tvDay3Name = findViewById(R.id.tvDay3Name)
+            tvDay3Number = findViewById(R.id.tvDay3Number)
+            tvDay4Name = findViewById(R.id.tvDay4Name)
+            tvDay4Number = findViewById(R.id.tvDay4Number)
+            tvDay5Name = findViewById(R.id.tvDay5Name)
+            tvDay5Number = findViewById(R.id.tvDay5Number)
+            tvDay6Name = findViewById(R.id.tvDay6Name)
+            tvDay6Number = findViewById(R.id.tvDay6Number)
+            tvDay7Name = findViewById(R.id.tvDay7Name)
+            tvDay7Number = findViewById(R.id.tvDay7Number)
         } catch (e: Exception) {
             e.printStackTrace()
             throw e
@@ -112,6 +166,7 @@ class CalorieTrackerActivity : AppCompatActivity() {
         
         btnAddMeal.setOnClickListener {
             val intent = Intent(this, AddMealActivity::class.java)
+            intent.putExtra("selected_date", CalendarManager.formatDateForStorage(selectedDate))
             startActivity(intent)
         }
         
@@ -130,6 +185,15 @@ class CalorieTrackerActivity : AppCompatActivity() {
         cardSnacks.setOnClickListener {
             openAddMeal(MealType.SNACKS)
         }
+        
+        // Date selector click listeners
+        day1Container.setOnClickListener { selectDate(0) }
+        day2Container.setOnClickListener { selectDate(1) }
+        day3Container.setOnClickListener { selectDate(2) }
+        day4Container.setOnClickListener { selectDate(3) }
+        day5Container.setOnClickListener { selectDate(4) }
+        day6Container.setOnClickListener { selectDate(5) }
+        day7Container.setOnClickListener { selectDate(6) }
         
         // Bottom navigation
         findViewById<androidx.constraintlayout.widget.ConstraintLayout>(R.id.navHome).setOnClickListener {
@@ -161,6 +225,7 @@ class CalorieTrackerActivity : AppCompatActivity() {
     private fun openAddMeal(mealType: MealType) {
         val intent = Intent(this, AddMealActivity::class.java)
         intent.putExtra("meal_type", mealType.name)
+        intent.putExtra("selected_date", CalendarManager.formatDateForStorage(selectedDate))
         startActivity(intent)
     }
 
@@ -180,11 +245,11 @@ class CalorieTrackerActivity : AppCompatActivity() {
             calorieTracker.getUserGoalCalories(
                 onSuccess = { goal ->
                     goalCalories = goal
-                    loadTodaysMeals()
+                    loadMealsForSelectedDate()
                 },
                 onError = {
                     goalCalories = 2200.0 // Default
-                    loadTodaysMeals()
+                    loadMealsForSelectedDate()
                 }
             )
         } catch (e: Exception) {
@@ -195,9 +260,11 @@ class CalorieTrackerActivity : AppCompatActivity() {
         }
     }
 
-    private fun loadTodaysMeals() {
+    private fun loadMealsForSelectedDate() {
         try {
-            calorieTracker.getTodaysMeals(
+            val dateString = CalendarManager.formatDateForStorage(selectedDate)
+            calorieTracker.getMealsForDate(
+                dateString,
                 onSuccess = { meals ->
                     dailyNutrition = calorieTracker.calculateDailyNutrition(meals, goalCalories)
                     updateUI()
@@ -277,6 +344,89 @@ class CalorieTrackerActivity : AppCompatActivity() {
         progressBar.progress = progress
     }
 
+    private fun setupDateSelector() {
+        weekDates = CalendarManager.getLast7Days()
+        updateDateSelector()
+        
+        // Select today by default
+        val todayIndex = weekDates.indexOfFirst { CalendarManager.isToday(it) }
+        if (todayIndex != -1) {
+            selectedDate = weekDates[todayIndex]
+        }
+    }
+    
+    private fun updateDateSelector() {
+        val dayContainers = listOf(day1Container, day2Container, day3Container, day4Container, day5Container, day6Container, day7Container)
+        val dayNames = listOf(tvDay1Name, tvDay2Name, tvDay3Name, tvDay4Name, tvDay5Name, tvDay6Name, tvDay7Name)
+        val dayNumbers = listOf(tvDay1Number, tvDay2Number, tvDay3Number, tvDay4Number, tvDay5Number, tvDay6Number, tvDay7Number)
+        
+        weekDates.forEachIndexed { index, date ->
+            if (index < dayNames.size) {
+                dayNames[index].text = CalendarManager.getDayName(date)
+                dayNumbers[index].text = CalendarManager.getDayNumber(date)
+                
+                // Update appearance based on selection and date type
+                updateDayAppearance(dayContainers[index], dayNames[index], dayNumbers[index], date)
+            }
+        }
+    }
+    
+    private fun updateDayAppearance(
+        container: androidx.constraintlayout.widget.ConstraintLayout,
+        nameView: TextView,
+        numberView: TextView,
+        date: Date
+    ) {
+        val isSelected = CalendarManager.formatDateForStorage(date) == CalendarManager.formatDateForStorage(selectedDate)
+        val isToday = CalendarManager.isToday(date)
+        val isFuture = CalendarManager.isFutureDate(date)
+        
+        when {
+            isSelected -> {
+                container.setBackgroundResource(R.drawable.selected_day_background)
+                nameView.setTextColor(getColor(R.color.white))
+                numberView.setTextColor(getColor(R.color.white))
+                container.isEnabled = true
+            }
+            isFuture -> {
+                container.setBackgroundResource(0)
+                nameView.setTextColor(getColor(R.color.gray_dark))
+                numberView.setTextColor(getColor(R.color.gray_dark))
+                container.isEnabled = false
+            }
+            else -> {
+                container.setBackgroundResource(0)
+                nameView.setTextColor(getColor(R.color.gray_light))
+                numberView.setTextColor(getColor(R.color.gray_light))
+                container.isEnabled = true
+            }
+        }
+    }
+    
+    private fun selectDate(dayIndex: Int) {
+        if (dayIndex < weekDates.size) {
+            val newDate = weekDates[dayIndex]
+            
+            // Don't allow future dates
+            if (CalendarManager.isFutureDate(newDate)) {
+                Toast.makeText(this, "Cannot view future dates", Toast.LENGTH_SHORT).show()
+                return
+            }
+            
+            selectedDate = newDate
+            updateDateSelector()
+            
+            // Show feedback for non-today dates
+            if (!CalendarManager.isToday(selectedDate)) {
+                val description = CalendarManager.getDateDescription(selectedDate)
+                Toast.makeText(this, "Viewing $description", Toast.LENGTH_SHORT).show()
+            }
+            
+            // Load data for selected date
+            loadCalorieData()
+        }
+    }
+    
     override fun onResume() {
         super.onResume()
         loadCalorieData() // Refresh data when returning to screen

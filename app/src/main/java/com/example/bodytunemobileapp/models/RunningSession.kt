@@ -7,7 +7,7 @@ data class RunningSession(
     val endTime: Long = 0L,
     val duration: Long = 0L,
     val distance: Double = 0.0,
-    val averagePace: String = "",
+    val averagePace: Double = 0.0,
     val calories: Int = 0,
     val route: List<RoutePoint> = emptyList(),
     val stats: RunningStats = RunningStats()

@@ -164,7 +164,8 @@ class SignUpActivity : AppCompatActivity() {
     }
 
     private fun navigateToMainActivity() {
-        val intent = Intent(this, MainActivity::class.java)
+        // After successful sign-up, always go to ProfileSetupActivity
+        val intent = Intent(this, ProfileSetupActivity::class.java)
         startActivity(intent)
         finish()
     }

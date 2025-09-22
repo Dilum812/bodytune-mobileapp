@@ -15,6 +15,7 @@ import com.example.bodytunemobileapp.adapters.ExerciseAdapter
 import com.example.bodytunemobileapp.data.Exercise
 import com.example.bodytunemobileapp.data.ExerciseCategory
 import com.example.bodytunemobileapp.data.ExerciseRepository
+import com.example.bodytunemobileapp.utils.ModernNotification
 
 class ExerciseListActivity : AppCompatActivity() {
 

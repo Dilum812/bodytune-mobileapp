@@ -13,6 +13,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import com.example.bodytunemobileapp.firebase.FirebaseHelper
 import com.example.bodytunemobileapp.models.BMIRecord
+import com.example.bodytunemobileapp.utils.ModernNotification
 import kotlin.math.pow
 
 class BMICalculatorActivity : AppCompatActivity() {
@@ -194,10 +195,10 @@ class BMICalculatorActivity : AppCompatActivity() {
 
             FirebaseHelper.saveBMIRecord(bmiRecord) { success, error ->
                 if (success) {
-                    Toast.makeText(this, "BMI record saved!", Toast.LENGTH_SHORT).show()
+                    ModernNotification.showSuccess(this, "BMI record saved successfully!")
                     // Data will be automatically refreshed in MainActivity via onResume()
                 } else {
-                    Toast.makeText(this, "Failed to save BMI record: $error", Toast.LENGTH_SHORT).show()
+                    ModernNotification.showError(this, "Failed to save BMI record: $error")
                 }
             }
         }

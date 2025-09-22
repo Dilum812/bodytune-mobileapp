@@ -22,6 +22,7 @@ import com.example.bodytunemobileapp.utils.CalorieTracker
 import com.example.bodytunemobileapp.utils.CalendarManager
 import com.example.bodytunemobileapp.models.DailyData
 import com.example.bodytunemobileapp.auth.GoogleSignInHelper
+import com.example.bodytunemobileapp.utils.ModernNotification
 import kotlin.math.pow
 import java.util.*
 
@@ -129,7 +130,7 @@ class MainActivity : AppCompatActivity() {
     private fun setupClickListeners() {
         // Quick Run button click
         btnStartTracking.setOnClickListener {
-            val intent = Intent(this, RunningTrackerFreeActivity::class.java)
+            val intent = Intent(this, QuickRunActivity::class.java)
             startActivity(intent)
         }
 
@@ -209,7 +210,7 @@ class MainActivity : AppCompatActivity() {
                 val googleSignInHelper = GoogleSignInHelper(this)
                 googleSignInHelper.signOut {
                     FirebaseHelper.signOut()
-                    Toast.makeText(this, "Signed out successfully", Toast.LENGTH_SHORT).show()
+                    ModernNotification.showSuccess(this, "Signed out successfully")
                     navigateToSignIn()
                 }
             }
@@ -348,34 +349,17 @@ class MainActivity : AppCompatActivity() {
         val dayNameView = dayView.getChildAt(0) as TextView
         val dayNumberView = dayView.getChildAt(1) as TextView
         
+        // Always show the actual day name (Sun, Mon, Tue, etc.)
+        dayNameView.text = CalendarManager.getDayName(date)
+        
         when {
-            CalendarManager.isToday(date) && date == selectedDate -> {
-                // Today and selected - highlight with blue background
-                dayView.setBackgroundResource(R.drawable.selected_day_background)
-                dayNameView.setTextColor(getColor(android.R.color.white))
-                dayNumberView.setTextColor(getColor(android.R.color.white))
-                dayNumberView.setTypeface(null, android.graphics.Typeface.BOLD)
-                
-                // Add "TODAY" indicator
-                dayNameView.text = "TODAY"
-            }
             date == selectedDate -> {
-                // Selected but not today
+                // Selected date - highlight with blue background
                 dayView.setBackgroundResource(R.drawable.selected_day_background)
                 dayNameView.setTextColor(getColor(android.R.color.white))
                 dayNumberView.setTextColor(getColor(android.R.color.white))
-                dayNumberView.setTypeface(null, android.graphics.Typeface.BOLD)
-            }
-            CalendarManager.isToday(date) -> {
-                // Today but not selected - show with emphasis
-                dayView.background = null
-                dayNameView.setTextColor(getColor(R.color.blue_primary))
-                dayNumberView.setTextColor(getColor(R.color.blue_primary))
                 dayNumberView.setTypeface(null, android.graphics.Typeface.BOLD)
                 dayView.isClickable = true
-                
-                // Add "TODAY" indicator
-                dayNameView.text = "TODAY"
             }
             CalendarManager.isFutureDate(date) -> {
                 // Future date - disabled
@@ -386,37 +370,12 @@ class MainActivity : AppCompatActivity() {
                 dayView.isClickable = false
             }
             else -> {
-                // Past date - available
+                // Past date or today (not selected) - available
                 dayView.background = null
                 dayNameView.setTextColor(getColor(R.color.calendar_text))
                 dayNumberView.setTextColor(getColor(R.color.calendar_text))
                 dayNumberView.setTypeface(null, android.graphics.Typeface.NORMAL)
                 dayView.isClickable = true
-            }
-        }
-        
-        // Load progress indicator for this date (async)
-        loadProgressIndicatorForDate(dayView, date)
-    }
-    
-    private fun loadProgressIndicatorForDate(dayView: LinearLayout, date: Date) {
-        // Only show progress for past dates and today
-        if (!CalendarManager.isFutureDate(date)) {
-            val dateString = CalendarManager.formatDateForStorage(date)
-            
-            FirebaseHelper.getDailyData(dateString) { dailyData, error ->
-                if (dailyData != null) {
-                    // Add subtle progress indicator
-                    val dayNumberView = dayView.getChildAt(1) as TextView
-                    
-                    if (dailyData.isCompleteFitnessDay()) {
-                        // Show completion indicator (green dot or checkmark)
-                        dayNumberView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.ic_check_small)
-                    } else if (dailyData.getDailyGoalProgress() > 0) {
-                        // Show partial progress indicator
-                        dayNumberView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.ic_progress_dot)
-                    }
-                }
             }
         }
     }
@@ -450,22 +409,58 @@ class MainActivity : AppCompatActivity() {
         // You can add a Toast or update a TextView to show selected date
         // For now, we'll use a subtle toast for user feedback
         if (!CalendarManager.isToday(selectedDate)) {
-            Toast.makeText(this, "Viewing data for $dateDescription", Toast.LENGTH_SHORT).show()
+            ModernNotification.showInfo(this, "Viewing data for $dateDescription")
         }
     }
     
     private fun loadDataForSelectedDate() {
         val dateString = CalendarManager.formatDateForStorage(selectedDate)
         
-        FirebaseHelper.getOrCreateDailyData(dateString) { dailyData, error ->
-            if (dailyData != null) {
-                currentDailyData = dailyData
-                updateUIWithDailyData(dailyData)
-            } else {
-                // Handle error or show default data
-                showDefaultData()
+        // Load calorie tracker data for the selected date
+        calorieTracker.getDailyNutritionForDate(dateString,
+            onSuccess = { nutrition ->
+                // Load or create daily data and update with real calorie information
+                FirebaseHelper.getOrCreateDailyData(dateString) { dailyData, error ->
+                    if (dailyData != null) {
+                        // Update daily data with real calorie tracker data
+                        val updatedDailyData = dailyData.copy(
+                            caloriesConsumed = nutrition.totalCalories,
+                            caloriesGoal = nutrition.goalCalories
+                        )
+                        
+                        // Save updated data back to Firebase
+                        FirebaseHelper.saveDailyData(updatedDailyData) { success, saveError ->
+                            // Update UI regardless of save success
+                            currentDailyData = updatedDailyData
+                            updateUIWithDailyData(updatedDailyData)
+                        }
+                    } else {
+                        // Create new daily data with calorie information
+                        val userId = FirebaseHelper.getCurrentUserId() ?: ""
+                        val newDailyData = DailyData.createDefault(dateString, userId).copy(
+                            caloriesConsumed = nutrition.totalCalories,
+                            caloriesGoal = nutrition.goalCalories
+                        )
+                        
+                        FirebaseHelper.saveDailyData(newDailyData) { success, saveError ->
+                            currentDailyData = newDailyData
+                            updateUIWithDailyData(newDailyData)
+                        }
+                    }
+                }
+            },
+            onError = { calorieError ->
+                // Fallback to daily data without calorie tracker integration
+                FirebaseHelper.getOrCreateDailyData(dateString) { dailyData, error ->
+                    if (dailyData != null) {
+                        currentDailyData = dailyData
+                        updateUIWithDailyData(dailyData)
+                    } else {
+                        showDefaultData()
+                    }
+                }
             }
-        }
+        )
     }
     
     private fun updateUIWithDailyData(dailyData: DailyData) {
@@ -488,39 +483,36 @@ class MainActivity : AppCompatActivity() {
     }
     
     private fun updateProgressIndicators(dailyData: DailyData) {
-        // Calculate daily progress score
-        val progressScore = dailyData.getDailyScore()
-        
         // Update daily goal progress bar
         val goalProgress = dailyData.getDailyGoalProgress()
         progressDaily.progress = goalProgress
-        
-        // Show progress feedback based on selected date
-        if (CalendarManager.isToday(selectedDate)) {
-            // Today's progress
-            if (goalProgress >= 100) {
-                // Goal achieved today
-                tvCaloriesConsumed.setTextColor(getColor(R.color.bmi_good_green))
-            } else if (goalProgress >= 75) {
-                // Good progress
-                tvCaloriesConsumed.setTextColor(getColor(R.color.bmi_warning_orange))
-            } else {
-                // Normal progress
-                tvCaloriesConsumed.setTextColor(getColor(android.R.color.white))
-            }
-        } else {
-            // Historical data - show completion status
-            if (dailyData.isCompleteFitnessDay()) {
-                tvCaloriesConsumed.setTextColor(getColor(R.color.bmi_good_green))
-            } else {
-                tvCaloriesConsumed.setTextColor(getColor(R.color.calendar_text))
-            }
-        }
     }
     
     private fun updateWorkoutPlanDisplay(dailyData: DailyData) {
         // This can be expanded to show different workout plans based on the day
         // For now, we'll keep the existing display
+        
+        // Check for achievements and show notifications
+        checkForAchievements(dailyData)
+    }
+    
+    private fun checkForAchievements(dailyData: DailyData) {
+        // Check for calorie goal achievement
+        if (dailyData.caloriesConsumed >= dailyData.caloriesGoal && dailyData.caloriesConsumed > 0) {
+            if (CalendarManager.isToday(selectedDate)) {
+                ModernNotification.showSuccess(this, "🎉 Daily calorie goal achieved!")
+            }
+        }
+        
+        // Check for workout completion
+        if (dailyData.workoutsCompleted > 0 && CalendarManager.isToday(selectedDate)) {
+            ModernNotification.showSuccess(this, "💪 Great job completing your workout!")
+        }
+        
+        // Check for running achievement
+        if (dailyData.hasRunToday && dailyData.runningDistance > 0 && CalendarManager.isToday(selectedDate)) {
+            ModernNotification.showSuccess(this, "🏃‍♂️ Running session completed!")
+        }
     }
     
     private fun showDefaultData() {
@@ -529,33 +521,21 @@ class MainActivity : AppCompatActivity() {
         loadLatestBMIRecord()
     }
 
-    private fun loadCalorieData() {
-        calorieTracker.getUserGoalCalories(
-            onSuccess = { goalCalories ->
-                calorieTracker.getTodaysMeals(
-                    onSuccess = { meals ->
-                        val dailyNutrition = calorieTracker.calculateDailyNutrition(meals, goalCalories)
-                        updateCalorieDisplay(dailyNutrition.totalCalories, goalCalories)
-                    },
-                    onError = {
-                        // Show default values on error
-                        updateCalorieDisplay(0.0, 2200.0)
-                    }
-                )
-            },
-            onError = {
-                // Show default values on error
-                updateCalorieDisplay(0.0, 2200.0)
-            }
-        )
-    }
 
     private fun updateCalorieDisplay(consumedCalories: Double, goalCalories: Double) {
         val remainingCalories = goalCalories - consumedCalories
         val progressPercentage = ((consumedCalories / goalCalories) * 100).toInt().coerceIn(0, 100)
         
+        // Update calorie numbers
         tvCaloriesConsumed.text = String.format("%.0f", consumedCalories)
         tvCaloriesGoal.text = "/ ${goalCalories.toInt()}"
         progressDaily.progress = progressPercentage
+        
+        // Keep the progress bar blue to match original design
+        tvCaloriesConsumed.setTextColor(getColor(android.R.color.white))
+        progressDaily.progressTintList = getColorStateList(R.color.blue_primary)
+        
+        // Keep the display simple to match original design
+        tvCaloriesGoal.text = "/ ${goalCalories.toInt()}"
     }
 }

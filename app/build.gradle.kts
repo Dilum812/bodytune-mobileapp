@@ -36,7 +36,7 @@ android {
     }
     
     buildFeatures {
-        viewBinding = true
+        viewBinding = false
     }
     
     lint {
@@ -67,11 +67,15 @@ dependencies {
     // Image loading
     implementation(libs.glide)
     
-    // OpenStreetMap (Free alternative to Google Maps)
-    implementation("org.osmdroid:osmdroid-android:6.1.17")
+    // Google Maps for map visualization
+    implementation("com.google.android.gms:play-services-maps:18.2.0")
     
     // Location Services (still needed for GPS)
     implementation("com.google.android.gms:play-services-location:21.0.1")
+    
+    // Additional dependencies for location and permissions
+    implementation("androidx.activity:activity-ktx:1.7.2")
+    implementation("androidx.fragment:fragment-ktx:1.6.1")
     
     // Test dependencies
     testImplementation(libs.junit)

@@ -7,7 +7,8 @@ data class Food(
     val proteinPer100g: Double = 0.0,
     val carbsPer100g: Double = 0.0,
     val fatPer100g: Double = 0.0,
-    val category: String = ""
+    val category: String = "",
+    val imageResource: Int = 0 // Drawable resource ID for food image
 )
 
 data class MealEntry(

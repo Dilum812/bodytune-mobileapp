@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.bodytunemobileapp.utils.ModernNotification
 
 // This class is deprecated - use RunningTrackerFreeActivity instead
 class RunningTrackerActivity : AppCompatActivity() {
@@ -12,7 +13,7 @@ class RunningTrackerActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         
         // Redirect to the free version
-        Toast.makeText(this, "Redirecting to free running tracker...", Toast.LENGTH_SHORT).show()
+        ModernNotification.showInfo(this, "Redirecting to free running tracker...")
         val intent = Intent(this, RunningTrackerFreeActivity::class.java)
         startActivity(intent)
         finish()

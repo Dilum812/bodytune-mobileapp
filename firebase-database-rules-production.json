@@ -4,7 +4,6 @@
       "$uid": {
         ".read": "$uid === auth.uid",
         ".write": "$uid === auth.uid",
-        ".validate": "newData.hasChildren(['uid', 'email', 'createdAt', 'updatedAt'])",
         "uid": {
           ".validate": "newData.val() === auth.uid"
         },
@@ -13,6 +12,9 @@
         },
         "name": {
           ".validate": "newData.isString()"
+        },
+        "gender": {
+          ".validate": "newData.isString() && (newData.val() === 'Male' || newData.val() === 'Female' || newData.val() === 'Other')"
         },
         "age": {
           ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 150"
@@ -159,7 +161,7 @@
         ".read": "$uid === auth.uid",
         ".write": "$uid === auth.uid",
         "$sessionId": {
-          ".validate": "newData.hasChildren(['userId', 'startTime', 'timestamp'])",
+          ".validate": "newData.hasChildren(['sessionId', 'userId', 'startTime', 'endTime', 'duration', 'distance', 'averagePace', 'calories'])",
           "userId": {
             ".validate": "newData.val() === auth.uid"
           },
@@ -179,7 +181,7 @@
             ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 1000"
           },
           "averagePace": {
-            ".validate": "newData.isString()"
+            ".validate": "newData.isNumber() && newData.val() >= 0"
           },
           "calories": {
             ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 10000"

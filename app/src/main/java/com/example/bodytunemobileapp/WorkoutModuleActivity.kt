@@ -10,6 +10,7 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import com.example.bodytunemobileapp.data.ExerciseCategory
+import com.example.bodytunemobileapp.utils.ModernNotification
 
 class WorkoutModuleActivity : AppCompatActivity() {
 
@@ -101,6 +102,16 @@ class WorkoutModuleActivity : AppCompatActivity() {
     }
 
     private fun navigateToExerciseList(category: ExerciseCategory) {
+        val categoryName = when(category) {
+            ExerciseCategory.CARDIO_ENDURANCE -> "Cardio"
+            ExerciseCategory.STRENGTH_TRAINING -> "Strength Training"
+            ExerciseCategory.CORE_ABS -> "Core & Abs"
+            ExerciseCategory.FLEXIBILITY_MOBILITY -> "Flexibility"
+            ExerciseCategory.HIIT -> "HIIT"
+            ExerciseCategory.YOGA -> "Yoga"
+            ExerciseCategory.PILATES -> "Pilates"
+        }
+        ModernNotification.showInfo(this, "Starting $categoryName workout")
         val intent = Intent(this, ExerciseListActivity::class.java)
         intent.putExtra("category", category.name)
         startActivity(intent)

@@ -155,9 +155,24 @@ class SignInActivity : AppCompatActivity() {
     }
 
     private fun navigateToMainActivity() {
-        val intent = Intent(this, MainActivity::class.java)
-        startActivity(intent)
-        finish()
+        // Check if user has completed profile setup
+        checkProfileSetupStatus()
+    }
+    
+    private fun checkProfileSetupStatus() {
+        com.example.bodytunemobileapp.firebase.FirebaseHelper.getUserProfile { user, error ->
+            if (user != null && user.height > 0 && user.weight > 0 && user.age > 0) {
+                // Profile is complete, go to MainActivity
+                val intent = Intent(this, MainActivity::class.java)
+                startActivity(intent)
+                finish()
+            } else {
+                // Profile is incomplete or error occurred, go to ProfileSetupActivity
+                val intent = Intent(this, ProfileSetupActivity::class.java)
+                startActivity(intent)
+                finish()
+            }
+        }
     }
 
     private fun isValidEmail(email: String): Boolean {

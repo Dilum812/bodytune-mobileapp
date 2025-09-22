@@ -106,19 +106,26 @@ class CalorieTracker {
         onSuccess: (List<MealEntry>) -> Unit,
         onError: (String) -> Unit
     ) {
+        val today = dateFormat.format(Date())
+        getMealsForDate(today, onSuccess, onError)
+    }
+    
+    fun getMealsForDate(
+        date: String,
+        onSuccess: (List<MealEntry>) -> Unit,
+        onError: (String) -> Unit
+    ) {
         val userId = auth.currentUser?.uid
         if (userId == null) {
             onError("User not authenticated")
             return
         }
         
-        val today = dateFormat.format(Date())
-        
         database.reference
             .child("meal_entries")
             .child(userId)
-            .child(today)
-            .addValueEventListener(object : ValueEventListener {
+            .child(date)
+            .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val meals = mutableListOf<MealEntry>()
                     for (mealSnapshot in snapshot.children) {
@@ -172,6 +179,36 @@ class CalorieTracker {
             lunchCalories = lunchCalories,
             dinnerCalories = dinnerCalories,
             snacksCalories = snacksCalories
+        )
+    }
+    
+    fun getDailyNutritionForDate(
+        date: String,
+        onSuccess: (DailyNutrition) -> Unit,
+        onError: (String) -> Unit
+    ) {
+        getUserGoalCalories(
+            onSuccess = { goalCalories ->
+                getMealsForDate(date,
+                    onSuccess = { meals ->
+                        val nutrition = DailyNutrition(
+                            date = date,
+                            totalCalories = meals.sumOf { it.calories },
+                            totalProtein = meals.sumOf { it.protein },
+                            totalCarbs = meals.sumOf { it.carbs },
+                            totalFat = meals.sumOf { it.fat },
+                            goalCalories = goalCalories,
+                            breakfastCalories = meals.filter { it.mealType == MealType.BREAKFAST }.sumOf { it.calories },
+                            lunchCalories = meals.filter { it.mealType == MealType.LUNCH }.sumOf { it.calories },
+                            dinnerCalories = meals.filter { it.mealType == MealType.DINNER }.sumOf { it.calories },
+                            snacksCalories = meals.filter { it.mealType == MealType.SNACKS }.sumOf { it.calories }
+                        )
+                        onSuccess(nutrition)
+                    },
+                    onError = onError
+                )
+            },
+            onError = onError
         )
     }
     
