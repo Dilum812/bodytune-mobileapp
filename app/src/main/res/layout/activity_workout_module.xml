@@ -87,7 +87,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:scaleType="centerCrop"
-                        android:src="@drawable/ex2" />
+                        android:src="@drawable/cardio" />
 
                     <View
                         android:layout_width="match_parent"
@@ -229,7 +229,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:scaleType="centerCrop"
-                        android:src="@drawable/ex2" />
+                        android:src="@drawable/core" />
 
                     <View
                         android:layout_width="match_parent"
@@ -300,7 +300,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:scaleType="centerCrop"
-                        android:src="@drawable/ex2" />
+                        android:src="@drawable/flexi" />
 
                     <View
                         android:layout_width="match_parent"
@@ -371,7 +371,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:scaleType="centerCrop"
-                        android:src="@drawable/ex2" />
+                        android:src="@drawable/hit" />
 
                     <View
                         android:layout_width="match_parent"
@@ -442,7 +442,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:scaleType="centerCrop"
-                        android:src="@drawable/ex2" />
+                        android:src="@drawable/yoga" />
 
                     <View
                         android:layout_width="match_parent"
@@ -513,7 +513,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:scaleType="centerCrop"
-                        android:src="@drawable/ex2" />
+                        android:src="@drawable/pilates" />
 
                     <View
                         android:layout_width="match_parent"

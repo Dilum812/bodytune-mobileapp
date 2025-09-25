@@ -64,7 +64,7 @@
             android:id="@+id/ivExerciseImage"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@drawable/icon"
+            android:src="@drawable/crunch"
             android:scaleType="centerCrop" />
 
     </androidx.cardview.widget.CardView>
@@ -127,34 +127,34 @@
         android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toTopOf="@id/btnExit">
 
-        <Button
+        <ImageView
             android:id="@+id/btnRestart"
             android:layout_width="64dp"
             android:layout_height="64dp"
-            android:text="↻"
-            android:textSize="22sp"
-            android:textColor="@color/white"
+            android:src="@drawable/reload"
             android:background="@drawable/circle_button_dark"
+            android:padding="16dp"
+            android:scaleType="fitCenter"
             android:layout_marginEnd="24dp" />
 
-        <Button
+        <ImageView
             android:id="@+id/btnPlayPause"
             android:layout_width="72dp"
             android:layout_height="72dp"
-            android:text="⏸"
-            android:textSize="28sp"
-            android:textColor="@color/white"
+            android:src="@drawable/play"
             android:background="@drawable/circle_button_primary"
+            android:padding="18dp"
+            android:scaleType="fitCenter"
             android:layout_marginEnd="24dp" />
 
-        <Button
+        <ImageView
             android:id="@+id/btnStop"
             android:layout_width="64dp"
             android:layout_height="64dp"
-            android:text="⏹"
-            android:textSize="22sp"
-            android:textColor="@color/white"
-            android:background="@drawable/circle_button_dark" />
+            android:src="@drawable/close"
+            android:background="@drawable/circle_button_dark"
+            android:padding="16dp"
+            android:scaleType="fitCenter" />
 
     </LinearLayout>
 

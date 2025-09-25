@@ -64,8 +64,8 @@
             android:id="@+id/ivExerciseImage"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@drawable/icon"
-            android:scaleType="centerCrop" />
+            android:scaleType="centerCrop"
+            android:src="@drawable/crunch" />
 
     </androidx.cardview.widget.CardView>
 
@@ -136,7 +136,7 @@
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="40dp"
-        android:text="▶ Start Workout"
+        android:text="Start Workout"
         android:textColor="@color/white"
         android:textSize="18sp"
         android:textStyle="bold"

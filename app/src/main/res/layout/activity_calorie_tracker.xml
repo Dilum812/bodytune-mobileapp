@@ -426,7 +426,7 @@
                     android:id="@+id/ivBreakfast"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:src="@drawable/ic_breakfast"
+                    android:src="@drawable/breakfast"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:tint="@color/blue" />
@@ -494,7 +494,7 @@
                     android:id="@+id/ivLunch"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:src="@drawable/ic_lunch"
+                    android:src="@drawable/lunch"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:tint="@color/purple" />
@@ -563,7 +563,7 @@
                     android:id="@+id/ivDinner"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:src="@drawable/ic_dinner"
+                    android:src="@drawable/dinner"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:tint="@color/blue" />
@@ -632,7 +632,7 @@
                     android:id="@+id/ivSnacks"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:src="@drawable/ic_snacks"
+                    android:src="@drawable/snacks"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:tint="@color/purple" />

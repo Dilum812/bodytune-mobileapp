@@ -23,7 +23,7 @@ object ExerciseRepository {
                 name = "Crunch",
                 description = "Full-body warm-up, improves circulation.",
                 duration = 15,
-                imageResource = R.drawable.icon,
+                imageResource = R.drawable.crunch,
                 category = ExerciseCategory.CARDIO_ENDURANCE,
                 instructions = "Crunch is a core exercise that works the abdominal muscles. Lie on your back with knees bent and feet flat, then lift your shoulders and upper back slightly off the floor. Keep your lower back pressed down and engage your abs. It helps strengthen the core and improve ab definition."
             ),
@@ -32,7 +32,7 @@ object ExerciseRepository {
                 name = "Jumping Jacks",
                 description = "Full-body warm-up, improves circulation.",
                 duration = 15,
-                imageResource = R.drawable.icon,
+                imageResource = R.drawable.jumping_jack,
                 category = ExerciseCategory.CARDIO_ENDURANCE,
                 instructions = "Jumping jacks are a full-body cardiovascular exercise. Start with feet together and arms at your sides. Jump while spreading your legs shoulder-width apart and raising your arms overhead. Jump back to starting position. This exercise improves cardiovascular health and coordination."
             ),
@@ -41,7 +41,7 @@ object ExerciseRepository {
                 name = "Burpees",
                 description = "Full-body warm-up, improves circulation.",
                 duration = 15,
-                imageResource = R.drawable.icon,
+                imageResource = R.drawable.burpees,
                 category = ExerciseCategory.CARDIO_ENDURANCE,
                 instructions = "Burpees are a high-intensity full-body exercise. Start standing, drop into a squat, place hands on floor, jump feet back into plank, do a push-up, jump feet back to squat, then jump up with arms overhead."
             ),
@@ -50,7 +50,7 @@ object ExerciseRepository {
                 name = "Mountain Climbers",
                 description = "Full-body warm-up, improves circulation.",
                 duration = 15,
-                imageResource = R.drawable.icon,
+                imageResource = R.drawable.mountain_climbers,
                 category = ExerciseCategory.CARDIO_ENDURANCE,
                 instructions = "Mountain climbers are a dynamic cardio exercise. Start in plank position, then alternate bringing knees toward chest in a running motion while maintaining plank position."
             ),
@@ -59,7 +59,7 @@ object ExerciseRepository {
                 name = "High Knees",
                 description = "Full-body warm-up, improves circulation.",
                 duration = 15,
-                imageResource = R.drawable.icon,
+                imageResource = R.drawable.high_knees,
                 category = ExerciseCategory.CARDIO_ENDURANCE,
                 instructions = "High knees are a cardio exercise that improves leg strength and cardiovascular endurance. Run in place while lifting knees as high as possible toward your chest."
             ),
@@ -68,7 +68,7 @@ object ExerciseRepository {
                 name = "Running in Place",
                 description = "Full-body warm-up, improves circulation.",
                 duration = 15,
-                imageResource = R.drawable.icon,
+                imageResource = R.drawable.running_in_place,
                 category = ExerciseCategory.CARDIO_ENDURANCE,
                 instructions = "Running in place is a simple cardio exercise. Lift your feet alternately while swinging your arms naturally, maintaining a steady rhythm."
             ),
@@ -77,7 +77,7 @@ object ExerciseRepository {
                 name = "Jump Rope",
                 description = "Full-body warm-up, improves circulation.",
                 duration = 15,
-                imageResource = R.drawable.icon,
+                imageResource = R.drawable.jump_rope,
                 category = ExerciseCategory.CARDIO_ENDURANCE,
                 instructions = "Jump rope is an excellent cardiovascular exercise. Hold rope handles, swing rope over head and under feet, jumping with both feet together."
             ),
@@ -86,7 +86,7 @@ object ExerciseRepository {
                 name = "Step Ups",
                 description = "Full-body warm-up, improves circulation.",
                 duration = 15,
-                imageResource = R.drawable.icon,
+                imageResource = R.drawable.step_ups,
                 category = ExerciseCategory.CARDIO_ENDURANCE,
                 instructions = "Step ups target leg muscles and improve cardiovascular fitness. Step up onto a platform with one foot, bring other foot up, then step down in reverse order."
             )
@@ -159,7 +159,7 @@ object ExerciseRepository {
                 name = "Crunches",
                 description = "Core strengthening, abdominal focus.",
                 duration = 15,
-                imageResource = R.drawable.icon,
+                imageResource = R.drawable.crunch,
                 category = ExerciseCategory.CORE_ABS,
                 instructions = "Crunches target abdominal muscles. Lie on back with knees bent, lift shoulders off ground while contracting abs."
             ),

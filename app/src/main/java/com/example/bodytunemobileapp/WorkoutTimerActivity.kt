@@ -20,9 +20,9 @@ class WorkoutTimerActivity : AppCompatActivity() {
     private lateinit var tvExerciseName: TextView
     private lateinit var tvTimeRemaining: TextView
     private lateinit var tvTimeLeft: TextView
-    private lateinit var btnRestart: Button
-    private lateinit var btnPlayPause: Button
-    private lateinit var btnStop: Button
+    private lateinit var btnRestart: ImageView
+    private lateinit var btnPlayPause: ImageView
+    private lateinit var btnStop: ImageView
     private lateinit var btnExit: Button
     private lateinit var circularProgressView: CircularProgressView
     
@@ -215,9 +215,9 @@ class WorkoutTimerActivity : AppCompatActivity() {
 
     private fun updatePauseButton() {
         if (isPaused || !isTimerRunning) {
-            btnPlayPause.text = "▶"
+            btnPlayPause.setImageResource(R.drawable.play)
         } else {
-            btnPlayPause.text = "⏸"
+            btnPlayPause.setImageResource(R.drawable.ic_pause)
         }
     }
 
