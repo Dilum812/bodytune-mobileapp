@@ -14,6 +14,7 @@ import androidx.core.view.WindowInsetsControllerCompat
 import com.example.bodytunemobileapp.firebase.FirebaseHelper
 import com.example.bodytunemobileapp.models.BMIRecord
 import com.example.bodytunemobileapp.utils.ModernNotification
+import com.example.bodytunemobileapp.utils.SmartAnimations
 import kotlin.math.pow
 
 class BMICalculatorActivity : AppCompatActivity() {
@@ -42,6 +43,9 @@ class BMICalculatorActivity : AppCompatActivity() {
 
         // Set default values
         setDefaultValues()
+        
+        // Animate UI entrance
+        animateUIEntrance()
     }
 
     private fun initializeViews() {
@@ -68,21 +72,58 @@ class BMICalculatorActivity : AppCompatActivity() {
     }
 
     private fun setupClickListeners() {
-        // Back button
+        // Back button with animation
         ivBack.setOnClickListener {
-            finish()
+            SmartAnimations.animateButtonPress(ivBack) {
+                finish()
+            }
         }
 
-        // Profile button
+        // Profile image click with animation
         ivProfile.setOnClickListener {
+            SmartAnimations.animateBounce(ivProfile)
             // TODO: Navigate to profile screen
         }
 
-        // Recalculate button
+        // Recalculate button with animation
         btnRecalculate.setOnClickListener {
-            calculateBMI()
+            SmartAnimations.animateButtonPress(btnRecalculate) {
+                calculateBMI()
+            }
+        }
+        
+        // Add text change listeners for real-time BMI calculation
+        etHeight.setOnFocusChangeListener { _, hasFocus ->
+            if (!hasFocus) calculateBMI()
+        }
+        
+        etWeight.setOnFocusChangeListener { _, hasFocus ->
+            if (!hasFocus) calculateBMI()
         }
     }
+    
+    private fun animateUIEntrance() {
+        // Animate header
+        SmartAnimations.animateViewEntrance(findViewById(R.id.headerLayout), delay = 0L)
+        
+        // Animate input card
+        SmartAnimations.animateViewEntrance(findViewById(R.id.inputCard), delay = 100L)
+        
+        // Animate result card
+        SmartAnimations.animateViewEntrance(findViewById(R.id.resultCard), delay = 200L)
+        
+        // Animate description card
+        SmartAnimations.animateViewEntrance(findViewById(R.id.descriptionCard), delay = 300L)
+        
+        // Animate button
+        SmartAnimations.animateViewEntrance(btnRecalculate, delay = 400L)
+        
+        // Initial BMI calculation after UI loads
+        btnRecalculate.postDelayed({
+            calculateBMI()
+        }, 600L)
+    }
+    
 
     private fun setDefaultValues() {
         // Load saved BMI data or use defaults
@@ -131,12 +172,13 @@ class BMICalculatorActivity : AppCompatActivity() {
             val bmi = weight / (height.pow(2))
             val bmiRounded = String.format("%.1f", bmi)
 
-            tvBMIValue.text = bmiRounded
+            // Animate BMI value change
+            SmartAnimations.animateTextChange(tvBMIValue, bmiRounded)
 
             // Determine BMI category and description
             val (category, description, color) = getBMICategory(bmi)
-            tvBMICategory.text = category
-            tvBMIDescription.text = description
+            SmartAnimations.animateTextChange(tvBMICategory, category)
+            SmartAnimations.animateTextChange(tvBMIDescription, description)
             tvBMICategory.setTextColor(getColor(color))
             
             // Set background color based on BMI category

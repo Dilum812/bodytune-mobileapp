@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import com.example.bodytunemobileapp.utils.SmartAnimations
 
 class WorkoutTimerActivity : AppCompatActivity() {
 
@@ -19,40 +20,48 @@ class WorkoutTimerActivity : AppCompatActivity() {
     private lateinit var tvExerciseName: TextView
     private lateinit var tvTimeRemaining: TextView
     private lateinit var tvTimeLeft: TextView
-    private lateinit var btnRestart: ImageView
-    private lateinit var btnPause: ImageView
-    private lateinit var btnStop: ImageView
+    private lateinit var btnRestart: Button
+    private lateinit var btnPlayPause: Button
+    private lateinit var btnStop: Button
     private lateinit var btnExit: Button
+    private lateinit var circularProgressView: CircularProgressView
     
     private var countDownTimer: CountDownTimer? = null
-    private var totalTimeInMillis: Long = 0
-    private var timeLeftInMillis: Long = 0
+    private var totalTimeInMillis: Long = 15 * 60 * 1000L // 15 minutes
+    private var timeLeftInMillis: Long = totalTimeInMillis
     private var isTimerRunning = false
     private var isPaused = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_workout_timer)
+        
+        try {
+            setContentView(R.layout.activity_workout_timer)
 
-        // Get exercise data from intent
-        val exerciseName = intent.getStringExtra("exercise_name") ?: "Exercise"
-        val exerciseDuration = intent.getIntExtra("exercise_duration", 15)
-        val exerciseImage = intent.getIntExtra("exercise_image", R.drawable.exercise_crunch)
+            // Get exercise data from intent
+            val exerciseName = intent.getStringExtra("exercise_name") ?: "Exercise"
+            val exerciseDuration = intent.getIntExtra("exercise_duration", 15)
+            val exerciseImage = intent.getIntExtra("exercise_image", R.drawable.icon)
 
-        // Initialize views
-        initializeViews()
+            // Initialize views
+            initializeViews()
 
-        // Set up immersive full-screen experience
-        setupFullScreen()
+            // Set up immersive full-screen experience
+            setupFullScreen()
 
-        // Set up UI
-        setupUI(exerciseName, exerciseDuration, exerciseImage)
+            // Set up UI
+            setupUI(exerciseName, exerciseDuration, exerciseImage)
 
-        // Set up click listeners
-        setupClickListeners()
+            // Set up click listeners
+            setupClickListeners()
 
-        // Start timer
-        startTimer()
+            // Start timer automatically
+            startTimer()
+            
+        } catch (e: Exception) {
+            // If there's any error, finish the activity
+            finish()
+        }
     }
 
     private fun initializeViews() {
@@ -63,9 +72,10 @@ class WorkoutTimerActivity : AppCompatActivity() {
         tvTimeRemaining = findViewById(R.id.tvTimeRemaining)
         tvTimeLeft = findViewById(R.id.tvTimeLeft)
         btnRestart = findViewById(R.id.btnRestart)
-        btnPause = findViewById(R.id.btnPause)
+        btnPlayPause = findViewById(R.id.btnPlayPause)
         btnStop = findViewById(R.id.btnStop)
         btnExit = findViewById(R.id.btnExit)
+        circularProgressView = findViewById(R.id.circularProgressView)
     }
 
     private fun setupFullScreen() {
@@ -81,14 +91,29 @@ class WorkoutTimerActivity : AppCompatActivity() {
     }
 
     private fun setupUI(exerciseName: String, exerciseDuration: Int, exerciseImage: Int) {
-        tvExerciseName.text = exerciseName
-        ivExerciseImage.setImageResource(exerciseImage)
-        
-        // Convert minutes to milliseconds
-        totalTimeInMillis = (exerciseDuration * 60 * 1000).toLong()
-        timeLeftInMillis = totalTimeInMillis
-        
-        updateTimerDisplay()
+        try {
+            tvExerciseName.text = exerciseName
+            
+            // Safely set exercise image
+            try {
+                ivExerciseImage.setImageResource(exerciseImage)
+            } catch (e: Exception) {
+                ivExerciseImage.setImageResource(R.drawable.icon)
+            }
+            
+            // Use fixed 15-minute timer
+            totalTimeInMillis = 15 * 60 * 1000L // 15 minutes
+            timeLeftInMillis = totalTimeInMillis
+            
+            updateTimerDisplay()
+            updateProgress()
+        } catch (e: Exception) {
+            // Handle any setup errors gracefully
+            totalTimeInMillis = 15 * 60 * 1000L
+            timeLeftInMillis = totalTimeInMillis
+            tvExerciseName.text = "Exercise"
+            updateTimerDisplay()
+        }
     }
 
     private fun setupClickListeners() {
@@ -105,11 +130,13 @@ class WorkoutTimerActivity : AppCompatActivity() {
             restartTimer()
         }
 
-        btnPause.setOnClickListener {
-            if (isTimerRunning) {
-                pauseTimer()
-            } else {
-                resumeTimer()
+        btnPlayPause.setOnClickListener {
+            SmartAnimations.animateButtonPress(btnPlayPause) {
+                if (isTimerRunning) {
+                    pauseTimer()
+                } else {
+                    resumeTimer()
+                }
             }
         }
 
@@ -176,7 +203,6 @@ class WorkoutTimerActivity : AppCompatActivity() {
         
         tvTimeRemaining.text = String.format("%02d:%02d Min", minutes, seconds)
         
-        val totalMinutes = (totalTimeInMillis / 1000) / 60
         val remainingMinutes = (timeLeftInMillis / 1000) / 60
         tvTimeLeft.text = "$remainingMinutes min left"
     }
@@ -184,14 +210,14 @@ class WorkoutTimerActivity : AppCompatActivity() {
     private fun updateProgress() {
         // Calculate progress percentage
         val progress = ((totalTimeInMillis - timeLeftInMillis).toFloat() / totalTimeInMillis.toFloat()) * 100
-        // TODO: Update circular progress bar if implemented
+        circularProgressView.setProgress(progress)
     }
 
     private fun updatePauseButton() {
         if (isPaused || !isTimerRunning) {
-            btnPause.setImageResource(R.drawable.ic_play)
+            btnPlayPause.text = "▶"
         } else {
-            btnPause.setImageResource(R.drawable.ic_pause)
+            btnPlayPause.text = "⏸"
         }
     }
 

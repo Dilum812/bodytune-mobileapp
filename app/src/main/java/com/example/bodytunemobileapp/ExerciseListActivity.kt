@@ -25,6 +25,7 @@ class ExerciseListActivity : AppCompatActivity() {
     private lateinit var rvExercises: RecyclerView
     private lateinit var exerciseAdapter: ExerciseAdapter
     private lateinit var category: ExerciseCategory
+    private lateinit var exercises: List<Exercise>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,7 +85,7 @@ class ExerciseListActivity : AppCompatActivity() {
         }
         
         // Load exercises for this category
-        val exercises = ExerciseRepository.getExercisesByCategory(category)
+        exercises = ExerciseRepository.getExercisesByCategory(category)
         exerciseAdapter.submitList(exercises)
     }
 
@@ -99,8 +100,9 @@ class ExerciseListActivity : AppCompatActivity() {
     }
 
     private fun navigateToExerciseDetail(exercise: Exercise) {
-        val intent = Intent(this, ExerciseDetailActivity::class.java)
+        val intent = Intent(this, ExerciseDetailsActivity::class.java)
         intent.putExtra("exercise_id", exercise.id)
+        intent.putExtra("category", category.name)
         startActivity(intent)
     }
 

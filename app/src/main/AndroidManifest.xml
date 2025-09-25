@@ -88,6 +88,24 @@
             android:screenOrientation="portrait" />
         
         <activity
+            android:name=".WorkoutSessionActivity"
+            android:exported="false"
+            android:theme="@style/AppTheme"
+            android:screenOrientation="portrait" />
+        
+        <activity
+            android:name=".SingleExerciseTimerActivity"
+            android:exported="false"
+            android:theme="@style/AppTheme"
+            android:screenOrientation="portrait" />
+        
+        <activity
+            android:name=".ExerciseDetailsActivity"
+            android:exported="false"
+            android:theme="@style/AppTheme"
+            android:screenOrientation="portrait" />
+        
+        <activity
             android:name=".RunningTrackerActivity"
             android:exported="false"
             android:screenOrientation="portrait"

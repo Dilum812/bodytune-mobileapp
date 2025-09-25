@@ -21,6 +21,7 @@ import com.example.bodytunemobileapp.models.BMIRecord
 import com.example.bodytunemobileapp.models.DailyData
 import com.example.bodytunemobileapp.utils.AchievementModal
 import com.example.bodytunemobileapp.utils.CalendarManager
+import com.example.bodytunemobileapp.utils.CalorieTracker
 import com.example.bodytunemobileapp.utils.ModernNotification
 import com.example.bodytunemobileapp.utils.ProfilePictureLoader
 import com.example.bodytunemobileapp.utils.SmartAnimations
@@ -74,6 +75,9 @@ class MainActivity : AppCompatActivity() {
     private var currentDailyData: DailyData? = null
     private val calendarDays = mutableListOf<Date>()
     private val calendarViews = mutableListOf<LinearLayout>()
+    
+    // CalorieTracker instance
+    private val calorieTracker = CalorieTracker()
     
     // Achievement modal
     private lateinit var achievementModal: AchievementModal
@@ -511,28 +515,64 @@ class MainActivity : AppCompatActivity() {
     private fun loadDataForSelectedDate() {
         val dateString = selectedDate
         
-        // Load daily data for the selected date
-        FirebaseHelper.getOrCreateDailyData(dateString) { dailyData, error ->
-            if (error == null && dailyData != null) {
-                currentDailyData = dailyData
-                updateUI(dailyData)
-            } else {
-                showDefaultData()
+        // Load calorie data from meal entries for the selected date
+        calorieTracker.getDailyNutritionForDate(dateString,
+            onSuccess = { nutrition ->
+                // Load or create daily data and update it with real calorie information
+                FirebaseHelper.getOrCreateDailyData(dateString) { dailyData, error ->
+                    if (error == null && dailyData != null) {
+                        // Update daily data with real calorie information
+                        val updatedDailyData = dailyData.copy(
+                            caloriesConsumed = nutrition.totalCalories,
+                            caloriesGoal = nutrition.goalCalories
+                        )
+                        
+                        // Save the updated data back to Firebase
+                        FirebaseHelper.saveDailyData(updatedDailyData) { success, saveError ->
+                            if (success) {
+                                currentDailyData = updatedDailyData
+                                updateUI(updatedDailyData)
+                            } else {
+                                // Still show the data even if save failed
+                                currentDailyData = updatedDailyData
+                                updateUI(updatedDailyData)
+                            }
+                        }
+                    } else {
+                        // Create new daily data with calorie information
+                        val userId = FirebaseHelper.getCurrentUserId() ?: ""
+                        val newDailyData = DailyData.createDefault(dateString, userId).copy(
+                            caloriesConsumed = nutrition.totalCalories,
+                            caloriesGoal = nutrition.goalCalories
+                        )
+                        
+                        FirebaseHelper.saveDailyData(newDailyData) { success, saveError ->
+                            currentDailyData = newDailyData
+                            updateUI(newDailyData)
+                        }
+                    }
+                }
+            },
+            onError = { error ->
+                // If calorie data fails to load, try to load daily data without calorie sync
+                FirebaseHelper.getOrCreateDailyData(dateString) { dailyData, error ->
+                    if (error == null && dailyData != null) {
+                        currentDailyData = dailyData
+                        updateUI(dailyData)
+                    } else {
+                        showDefaultData()
+                    }
+                }
             }
-        }
+        )
     }
     
     private fun updateUI(dailyData: DailyData) {
         // Update calorie display with progress
         updateCalorieDisplay(dailyData.caloriesConsumed, dailyData.caloriesGoal)
         
-        // Update BMI display if available
-        if (dailyData.bmiValue > 0) {
-            updateBMIDisplay(dailyData.bmiValue, dailyData.bmiCategory)
-        } else {
-            // Load latest BMI record as fallback
-            loadLatestBMIRecord()
-        }
+        // Update BMI display - always load latest BMI record for consistency
+        loadLatestBMIRecord()
         
         // Update workout plan display with progress indicators
         updateWorkoutPlanDisplay(dailyData)
@@ -692,17 +732,16 @@ class MainActivity : AppCompatActivity() {
         updateCalorieDisplay(0.0, 2200.0)
         loadLatestBMIRecord()
         
-        // Initialize achievements with default data
-        val defaultDailyData = DailyData(
-            date = selectedDate,
-            caloriesConsumed = 1850.0,
-            caloriesGoal = 2200.0,
-            workoutsCompleted = 3,
-            hasRunToday = false,
-            runningDistance = 0.0,
-            bmiValue = 22.4,
-            bmiCategory = "Normal Weight"
-        )
+        // Initialize achievements with realistic default data based on selected date
+        val userId = FirebaseHelper.getCurrentUserId() ?: ""
+        val defaultDailyData = DailyData.createDefault(selectedDate, userId)
+        
+        // Save the default data for future reference
+        FirebaseHelper.saveDailyData(defaultDailyData) { success, error ->
+            // Continue regardless of save success
+        }
+        
+        currentDailyData = defaultDailyData
         updateSimpleAchievements(defaultDailyData)
     }
 
