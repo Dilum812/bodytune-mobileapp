@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#1a1a1a"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
+
+        <!-- Header -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Profile Picture Test"
+            android:textColor="#FFFFFF"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="24dp" />
+
+        <!-- Profile Picture Display -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            app:cardCornerRadius="100dp"
+            app:cardElevation="8dp"
+            android:layout_marginBottom="24dp">
+
+            <ImageView
+                android:id="@+id/ivProfileTest"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@drawable/profile_placeholder" />
+
+        </androidx.cardview.widget.CardView>
+
+        <!-- Control Buttons -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="24dp">
+
+            <Button
+                android:id="@+id/btnLoadProfile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Load Profile Picture"
+                android:textColor="#FFFFFF"
+                android:backgroundTint="#4285F4"
+                android:layout_marginBottom="8dp" />
+
+            <Button
+                android:id="@+id/btnTestUrl"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Test with Known URLs"
+                android:textColor="#FFFFFF"
+                android:backgroundTint="#34A853"
+                android:layout_marginBottom="8dp" />
+
+            <Button
+                android:id="@+id/btnRunDiagnostics"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Run Diagnostics"
+                android:textColor="#FFFFFF"
+                android:backgroundTint="#FF9800"
+                android:layout_marginBottom="8dp" />
+
+            <Button
+                android:id="@+id/btnClearCache"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Clear Cache and Reload"
+                android:textColor="#FFFFFF"
+                android:backgroundTint="#F44336"
+                android:layout_marginBottom="8dp" />
+
+        </LinearLayout>
+
+        <!-- Debug Information Display -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="4dp"
+            android:layout_marginBottom="16dp">
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:padding="16dp">
+
+                <TextView
+                    android:id="@+id/tvDebugInfo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Click 'Run Diagnostics' to see debug information..."
+                    android:textColor="#333333"
+                    android:textSize="12sp"
+                    android:fontFamily="monospace"
+                    android:lineSpacingExtra="2dp" />
+
+            </ScrollView>
+
+        </androidx.cardview.widget.CardView>
+
+        <!-- Instructions -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Instructions:\n\n1. Click 'Run Diagnostics' to check your account status\n2. Click 'Load Profile Picture' to test loading\n3. Click 'Test with Known URLs' to verify Glide is working\n4. Check Android Studio Logcat for detailed logs\n\nFilter logs by: ProfilePictureLoader"
+            android:textColor="#CCCCCC"
+            android:textSize="14sp"
+            android:lineSpacingExtra="4dp"
+            android:padding="16dp"
+            android:background="#2a2a2a"
+            android:layout_marginTop="16dp" />
+
+    </LinearLayout>
+
+</ScrollView>
