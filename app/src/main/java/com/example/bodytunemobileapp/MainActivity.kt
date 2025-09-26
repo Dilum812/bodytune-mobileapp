@@ -2,6 +2,7 @@ package com.example.bodytunemobileapp
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.view.WindowManager
 import android.widget.Button
 import android.widget.ImageView
@@ -27,6 +28,7 @@ import com.example.bodytunemobileapp.utils.ProfilePictureLoader
 import com.example.bodytunemobileapp.utils.SmartAnimations
 import kotlin.math.pow
 import java.util.*
+import android.util.Log
 
 class MainActivity : AppCompatActivity() {
 
@@ -190,6 +192,8 @@ class MainActivity : AppCompatActivity() {
         navMeals.setOnClickListener {
             SmartAnimations.animateButtonPress(navMeals) {
                 val intent = Intent(this, CalorieTrackerActivity::class.java)
+                // Pass the current selected date to CalorieTracker
+                intent.putExtra("selected_date", selectedDate)
                 startActivity(intent)
                 overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
             }
@@ -232,6 +236,8 @@ class MainActivity : AppCompatActivity() {
         cardDailyGoal.setOnClickListener {
             SmartAnimations.animateCardPress(cardDailyGoal) {
                 val intent = Intent(this, CalorieTrackerActivity::class.java)
+                // Pass the current selected date to CalorieTracker
+                intent.putExtra("selected_date", selectedDate)
                 startActivity(intent)
                 overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
             }
@@ -248,6 +254,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun loadProfilePicture() {
+        ProfilePictureLoader.loadProfilePicture(this, ivProfile)
+    }
+    
+    private fun refreshProfilePicture() {
         ProfilePictureLoader.loadProfilePicture(this, ivProfile)
     }
 
@@ -356,8 +366,19 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        Log.d("MainActivity", "onResume called - current selectedDate: $selectedDate")
+        
+        // Refresh profile picture in case user updated their Google account
+        refreshProfilePicture()
+        
         // Reload data for selected date
         loadDataForSelectedDate()
+        
+        // Also refresh today's data if we're viewing today (common case when returning from CalorieTracker)
+        val todayString = CalendarManager.formatDateForStorage(Date())
+        if (selectedDate == todayString) {
+            Log.d("MainActivity", "Refreshing today's data on resume")
+        }
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
@@ -368,29 +389,26 @@ class MainActivity : AppCompatActivity() {
     }
     
     private fun animateUIEntrance() {
-        // Animate header elements
-        SmartAnimations.animateViewEntrance(findViewById(R.id.headerLayout), delay = 0L)
+        // Enhanced UI entrance with smoother animations
+        val views = listOf(
+            findViewById<View>(R.id.headerLayout),
+            findViewById<View>(R.id.calendarLayout),
+            findViewById<View>(R.id.statsRow1),
+            findViewById<View>(R.id.statsRow2),
+            findViewById<View>(R.id.workoutsSection),
+            findViewById<View>(R.id.achievementsSection),
+            findViewById<View>(R.id.bottomNavigation)
+        )
         
-        // Animate calendar with stagger
-        SmartAnimations.animateViewEntrance(findViewById(R.id.calendarLayout), delay = 100L)
+        // Animate views with stagger
+        views.forEachIndexed { index, view ->
+            SmartAnimations.animateViewEntrance(view, delay = (index * 120L))
+        }
         
-        // Animate stats cards with stagger
-        SmartAnimations.animateViewEntrance(findViewById(R.id.statsRow1), delay = 200L)
-        SmartAnimations.animateViewEntrance(findViewById(R.id.statsRow2), delay = 300L)
-        
-        // Animate workouts section
-        SmartAnimations.animateViewEntrance(findViewById(R.id.workoutsSection), delay = 400L)
-        
-        // Animate achievements section
-        SmartAnimations.animateViewEntrance(findViewById(R.id.achievementsSection), delay = 500L)
-        
-        // Animate bottom navigation
-        SmartAnimations.animateViewEntrance(findViewById(R.id.bottomNavigation), delay = 600L)
-        
-        // Animate profile picture with bounce
+        // Special animation for profile picture
         ivProfile.postDelayed({
             SmartAnimations.animateBounce(ivProfile)
-        }, 800L)
+        }, 900L)
     }
 
     private fun initializeCalendar() {
@@ -492,7 +510,9 @@ class MainActivity : AppCompatActivity() {
     }
     
     private fun selectDate(date: Date) {
-        selectedDate = CalendarManager.formatDateForStorage(date)
+        val newSelectedDate = CalendarManager.formatDateForStorage(date)
+        Log.d("MainActivity", "Selecting new date: $newSelectedDate (was: $selectedDate)")
+        selectedDate = newSelectedDate
         updateCalendarDisplay()
         showSelectedDateInfo()
         loadDataForSelectedDate()
@@ -516,9 +536,14 @@ class MainActivity : AppCompatActivity() {
         val dateString = selectedDate
         
         // Load calorie data from meal entries for the selected date
+        Log.d("MainActivity", "Loading data for selected date: $dateString")
         calorieTracker.getDailyNutritionForDate(dateString,
             onSuccess = { nutrition ->
-                // Load or create daily data and update it with real calorie information
+                Log.d("MainActivity", "Received nutrition data: ${nutrition.totalCalories}/${nutrition.goalCalories}")
+                // Update UI immediately with real calorie data
+                updateCalorieDisplay(nutrition.totalCalories, nutrition.goalCalories)
+                
+                // Also sync with DailyData for persistence
                 FirebaseHelper.getOrCreateDailyData(dateString) { dailyData, error ->
                     if (error == null && dailyData != null) {
                         // Update daily data with real calorie information
@@ -529,14 +554,10 @@ class MainActivity : AppCompatActivity() {
                         
                         // Save the updated data back to Firebase
                         FirebaseHelper.saveDailyData(updatedDailyData) { success, saveError ->
-                            if (success) {
-                                currentDailyData = updatedDailyData
-                                updateUI(updatedDailyData)
-                            } else {
-                                // Still show the data even if save failed
-                                currentDailyData = updatedDailyData
-                                updateUI(updatedDailyData)
-                            }
+                            currentDailyData = updatedDailyData
+                            // Update other UI components (BMI, achievements, etc.)
+                            updateWorkoutPlanDisplay(updatedDailyData)
+                            updateProgressIndicators(updatedDailyData)
                         }
                     } else {
                         // Create new daily data with calorie information
@@ -548,21 +569,33 @@ class MainActivity : AppCompatActivity() {
                         
                         FirebaseHelper.saveDailyData(newDailyData) { success, saveError ->
                             currentDailyData = newDailyData
-                            updateUI(newDailyData)
+                            updateWorkoutPlanDisplay(newDailyData)
+                            updateProgressIndicators(newDailyData)
                         }
                     }
                 }
+                
+                // Load BMI data separately
+                loadLatestBMIRecord()
             },
             onError = { error ->
-                // If calorie data fails to load, try to load daily data without calorie sync
+                Log.e("MainActivity", "Error loading calorie data for $dateString: $error")
+                // If calorie data fails to load, show default calorie display
+                updateCalorieDisplay(0.0, 2200.0)
+                
+                // Try to load daily data without calorie sync
                 FirebaseHelper.getOrCreateDailyData(dateString) { dailyData, error ->
                     if (error == null && dailyData != null) {
                         currentDailyData = dailyData
-                        updateUI(dailyData)
+                        updateWorkoutPlanDisplay(dailyData)
+                        updateProgressIndicators(dailyData)
                     } else {
                         showDefaultData()
                     }
                 }
+                
+                // Load BMI data separately
+                loadLatestBMIRecord()
             }
         )
     }
@@ -746,6 +779,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateCalorieDisplay(consumedCalories: Double, goalCalories: Double) {
+        Log.d("MainActivity", "Updating calorie display: $consumedCalories/$goalCalories")
         val remainingCalories = goalCalories - consumedCalories
         val progressPercentage = ((consumedCalories / goalCalories) * 100).toInt().coerceIn(0, 100)
         
@@ -759,6 +793,8 @@ class MainActivity : AppCompatActivity() {
         // Keep the progress bar blue to match original design
         tvCaloriesConsumed.setTextColor(ContextCompat.getColor(this, android.R.color.white))
         progressDaily.progressTintList = ContextCompat.getColorStateList(this, R.color.blue_primary)
+        
+        Log.d("MainActivity", "Calorie display updated successfully")
     }
     
     override fun onBackPressed() {

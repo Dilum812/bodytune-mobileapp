@@ -11,6 +11,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import java.text.SimpleDateFormat
 import java.util.*
+import android.util.Log
 
 class CalorieTracker {
     
@@ -117,10 +118,12 @@ class CalorieTracker {
     ) {
         val userId = auth.currentUser?.uid
         if (userId == null) {
+            Log.e("CalorieTracker", "User not authenticated for date: $date")
             onError("User not authenticated")
             return
         }
         
+        Log.d("CalorieTracker", "Loading meals for date: $date, userId: $userId")
         database.reference
             .child("meal_entries")
             .child(userId)
@@ -128,14 +131,21 @@ class CalorieTracker {
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val meals = mutableListOf<MealEntry>()
+                    Log.d("CalorieTracker", "Snapshot exists: ${snapshot.exists()}, children count: ${snapshot.childrenCount}")
+                    
                     for (mealSnapshot in snapshot.children) {
                         val meal = mealSnapshot.getValue(MealEntry::class.java)
-                        meal?.let { meals.add(it) }
+                        meal?.let { 
+                            meals.add(it)
+                            Log.d("CalorieTracker", "Added meal: ${it.foodName} - ${it.calories} cal")
+                        }
                     }
+                    Log.d("CalorieTracker", "Total meals loaded for $date: ${meals.size}")
                     onSuccess(meals)
                 }
                 
                 override fun onCancelled(error: DatabaseError) {
+                    Log.e("CalorieTracker", "Error loading meals for $date: ${error.message}")
                     onError(error.message)
                 }
             })
@@ -187,13 +197,19 @@ class CalorieTracker {
         onSuccess: (DailyNutrition) -> Unit,
         onError: (String) -> Unit
     ) {
+        Log.d("CalorieTracker", "Loading nutrition for date: $date")
         getUserGoalCalories(
             onSuccess = { goalCalories ->
+                Log.d("CalorieTracker", "Goal calories loaded: $goalCalories")
                 getMealsForDate(date,
                     onSuccess = { meals ->
+                        Log.d("CalorieTracker", "Meals loaded for $date: ${meals.size} meals")
+                        val totalCalories = meals.sumOf { it.calories }
+                        Log.d("CalorieTracker", "Total calories calculated: $totalCalories")
+                        
                         val nutrition = DailyNutrition(
                             date = date,
-                            totalCalories = meals.sumOf { it.calories },
+                            totalCalories = totalCalories,
                             totalProtein = meals.sumOf { it.protein },
                             totalCarbs = meals.sumOf { it.carbs },
                             totalFat = meals.sumOf { it.fat },
@@ -203,12 +219,19 @@ class CalorieTracker {
                             dinnerCalories = meals.filter { it.mealType == MealType.DINNER }.sumOf { it.calories },
                             snacksCalories = meals.filter { it.mealType == MealType.SNACKS }.sumOf { it.calories }
                         )
+                        Log.d("CalorieTracker", "Nutrition object created: ${nutrition.totalCalories}/${nutrition.goalCalories}")
                         onSuccess(nutrition)
                     },
-                    onError = onError
+                    onError = { error ->
+                        Log.e("CalorieTracker", "Error loading meals for $date: $error")
+                        onError(error)
+                    }
                 )
             },
-            onError = onError
+            onError = { error ->
+                Log.e("CalorieTracker", "Error loading goal calories: $error")
+                onError(error)
+            }
         )
     }
     

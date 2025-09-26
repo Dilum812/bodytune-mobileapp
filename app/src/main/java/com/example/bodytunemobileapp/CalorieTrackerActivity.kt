@@ -15,7 +15,11 @@ import com.example.bodytunemobileapp.models.MealType
 import com.example.bodytunemobileapp.utils.CalorieTracker
 import com.example.bodytunemobileapp.utils.ProfilePictureLoader
 import com.example.bodytunemobileapp.utils.CalendarManager
+import com.example.bodytunemobileapp.utils.SmartAnimations
 import android.widget.Toast
+import android.util.Log
+import android.view.View
+import androidx.core.content.ContextCompat
 import java.util.Date
 
 class CalorieTrackerActivity : AppCompatActivity() {
@@ -161,29 +165,41 @@ class CalorieTrackerActivity : AppCompatActivity() {
 
     private fun setupClickListeners() {
         ivBack.setOnClickListener {
-            finish()
+            SmartAnimations.animateButtonPress(ivBack) {
+                finish()
+            }
         }
         
         btnAddMeal.setOnClickListener {
-            val intent = Intent(this, AddMealActivity::class.java)
-            intent.putExtra("selected_date", CalendarManager.formatDateForStorage(selectedDate))
-            startActivity(intent)
+            SmartAnimations.animateButtonPress(btnAddMeal) {
+                val intent = Intent(this, AddMealActivity::class.java)
+                intent.putExtra("selected_date", CalendarManager.formatDateForStorage(selectedDate))
+                startActivity(intent)
+            }
         }
         
         cardBreakfast.setOnClickListener {
-            openAddMeal(MealType.BREAKFAST)
+            SmartAnimations.animateCardPress(cardBreakfast) {
+                openAddMeal(MealType.BREAKFAST)
+            }
         }
         
         cardLunch.setOnClickListener {
-            openAddMeal(MealType.LUNCH)
+            SmartAnimations.animateCardPress(cardLunch) {
+                openAddMeal(MealType.LUNCH)
+            }
         }
         
         cardDinner.setOnClickListener {
-            openAddMeal(MealType.DINNER)
+            SmartAnimations.animateCardPress(cardDinner) {
+                openAddMeal(MealType.DINNER)
+            }
         }
         
         cardSnacks.setOnClickListener {
-            openAddMeal(MealType.SNACKS)
+            SmartAnimations.animateCardPress(cardSnacks) {
+                openAddMeal(MealType.SNACKS)
+            }
         }
         
         // Date selector click listeners
@@ -237,6 +253,30 @@ class CalorieTrackerActivity : AppCompatActivity() {
             // Set default placeholder if profile loading fails
             ivProfile.setImageResource(R.drawable.profile_placeholder)
         }
+    }
+    
+    private fun animateUIEntrance() {
+        // Enhanced UI entrance with premium animations
+        val uiElements = listOf(
+            findViewById<View>(R.id.headerLayout),
+            findViewById<View>(R.id.progressContainer),
+            findViewById<View>(R.id.dateSelector),
+            cardBreakfast,
+            cardLunch,
+            cardDinner,
+            cardSnacks,
+            btnAddMeal
+        )
+        
+        // Animate UI elements with stagger
+        uiElements.forEachIndexed { index, view ->
+            SmartAnimations.animateViewEntrance(view, delay = (index * 100L))
+        }
+        
+        // Special animation for profile picture
+        ivProfile.postDelayed({
+            SmartAnimations.animateBounce(ivProfile)
+        }, 600L)
     }
 
     private fun loadCalorieData() {
@@ -292,7 +332,7 @@ class CalorieTrackerActivity : AppCompatActivity() {
             val remainingCalories = nutrition.goalCalories - consumedCalories
             val progressPercentage = ((consumedCalories / nutrition.goalCalories) * 100).toInt().coerceIn(0, 100)
             
-            circularProgress.progress = progressPercentage
+            SmartAnimations.animateProgressBar(circularProgress, progressPercentage)
             tvCaloriesConsumed.text = String.format("%.0f", remainingCalories.coerceAtLeast(0.0))
             tvCaloriesLeft.text = if (remainingCalories > 0) "kcal left" else "over goal"
             
@@ -339,9 +379,11 @@ class CalorieTrackerActivity : AppCompatActivity() {
         consumedCalories: Double,
         goalCalories: Double
     ) {
-        caloriesTextView.text = "${consumedCalories.toInt()}/${goalCalories.toInt()} kcal"
+        val newText = "${consumedCalories.toInt()}/${goalCalories.toInt()} kcal"
+        SmartAnimations.animateTextChange(caloriesTextView, newText)
+        
         val progress = ((consumedCalories / goalCalories) * 100).toInt().coerceIn(0, 100)
-        progressBar.progress = progress
+        SmartAnimations.animateProgressBar(progressBar, progress, duration = SmartAnimations.DURATION_MEDIUM)
     }
 
     private fun setupDateSelector() {
@@ -384,20 +426,20 @@ class CalorieTrackerActivity : AppCompatActivity() {
         when {
             isSelected -> {
                 container.setBackgroundResource(R.drawable.selected_day_background)
-                nameView.setTextColor(getColor(R.color.white))
-                numberView.setTextColor(getColor(R.color.white))
+                nameView.setTextColor(ContextCompat.getColor(this, R.color.white))
+                numberView.setTextColor(ContextCompat.getColor(this, R.color.white))
                 container.isEnabled = true
             }
             isFuture -> {
                 container.setBackgroundResource(0)
-                nameView.setTextColor(getColor(R.color.gray_dark))
-                numberView.setTextColor(getColor(R.color.gray_dark))
+                nameView.setTextColor(ContextCompat.getColor(this, R.color.gray_dark))
+                numberView.setTextColor(ContextCompat.getColor(this, R.color.gray_dark))
                 container.isEnabled = false
             }
             else -> {
                 container.setBackgroundResource(0)
-                nameView.setTextColor(getColor(R.color.gray_light))
-                numberView.setTextColor(getColor(R.color.gray_light))
+                nameView.setTextColor(ContextCompat.getColor(this, R.color.gray_light))
+                numberView.setTextColor(ContextCompat.getColor(this, R.color.gray_light))
                 container.isEnabled = true
             }
         }
